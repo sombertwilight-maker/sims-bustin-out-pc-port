@@ -1,0 +1,17 @@
+# Built and generated from the game: never committed
+sims_bustinout/src/recomp/gen/
+sims_bustinout/build*/
+xboxrecomp/build*/
+xboxrecomp/game_files/
+xboxrecomp/tools/*/output/
+*.exe
+*.iso
+*.xbe
+__pycache__/
+
+# Runtime files next to a built exe
+game/
+saves/
+textures/
+*.log
+tls_diag.txt
