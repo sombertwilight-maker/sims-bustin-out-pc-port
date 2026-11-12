@@ -100,6 +100,12 @@ typedef struct Nv2aGpuVsh {
     uint32_t near_z;               /* clip at it (RECOMP_CLIP_NEAR_Z)       */
     uint32_t fog_enable, fog_mode; /* fog_factor's inputs                   */
     float    fog_param[2];
+    /* Small batches only (probed != 0): the screen-space box the program puts
+     * the vertices in, and the range of their w, found by running it on the
+     * CPU -- how a back end tells a flat 2D overlay from a 3D draw. */
+    uint32_t probed;
+    float    box[4];               /* x0 y0 x1 y1, surface pixels           */
+    float    wmin, wmax;
 } Nv2aGpuVsh;
 
 typedef struct {

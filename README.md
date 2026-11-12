@@ -39,7 +39,12 @@ All under `xboxrecomp/src/`:
 - **Direct3D 11 renderer** (`kernel/nv2a_d3d11.c`, new): register combiners
   and NV2A vertex programs as generated HLSL, render-target and texture caches,
   1x–4x internal resolution, swap-chain presentation, texture dump/replace
-  (PNG).
+  (PNG), MSAA (2x/4x/8x, resolved before a target is sampled, presented or
+  copied back), and 16:9 output: screen-sized targets get 4/3 the columns,
+  and flat 2D draws (w = 1, found by running small batches' vertex programs
+  on the CPU in `kernel/nv2a_pb_exec.c`) are drawn 3/4 as wide so the HUD
+  keeps its shape. Render targets the CPU has since overwritten are dropped
+  when sampled.
 - **Pushbuffer walking** (`kernel/nv2a_pb_scan.c`, `kernel/nv2a_pb_exec.c`):
   DMA walk with stricter command validation and resync; frame pacing through
   the flip hold with a frame-rate cap (`kernel/nv2a_flip_hold.*`).
@@ -47,7 +52,8 @@ All under `xboxrecomp/src/`:
   delivered when the GPU reaches them rather than at the next vblank; 60 Hz or
   120 Hz vblank (the experimental 60 fps mode); per-call timing in the log.
 - **Window** (`video/fb_present.c`, `video/gfx_config.h`): the F6 graphics
-  menu (including the direct-movement and camera settings), FPS counter, `settings.ini` persistence, and a "Working, please
+  menu (including widescreen, antialiasing and the direct-movement and camera
+  settings), FPS counter, `settings.ini` persistence, and a "Working, please
   wait..." note while the game draws nothing (saving, quitting).
 - **Input** (`input/xinput_device.c`, `input/xinput_xbox.h`): a hook so the
   game side can read and rewrite the pad each frame (used by direct movement).
@@ -57,6 +63,13 @@ All under `xboxrecomp/src/`:
 - Rendering fixes: depth writes follow the NV2A/OpenGL rule (no write with the
   depth test off) — this fixed the black patches in house interiors; border
   sampling clamps unless a border colour is set.
+
+## Widescreen
+
+The game has its own 16:9 mode (its display object at 0x35D440: +0x274 makes
+every view's aspect 16:9, `sub_001287C0`). `direct_move.c` sets it from the F6
+setting each frame; reporting a widescreen TV at boot instead stalls the game's
+Direct3D set-up. The renderer shows the picture 16:9 and corrects the 2D.
 
 ## Direct movement (experimental)
 

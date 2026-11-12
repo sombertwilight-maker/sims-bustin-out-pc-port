@@ -71,10 +71,25 @@ extern volatile int g_prof_gohere;
 
 static void dm_pick_input(XBOX_INPUT_STATE *st);
 
+/* Widescreen (F6, RECOMP_WIDESCREEN): the game reads the console's video
+ * flags once, at start, into its display object (0x35D440, also at
+ * [0x35D438]): +0x274 set makes every view's aspect 16:9 (sub_001287C0).
+ * Kept in step with the setting here, once a frame, so it can change while
+ * playing. */
+static void sims_widescreen_sync(void)
+{
+    uint32_t d = GMEM32(0x35D438);
+    uint8_t want = xbox_GfxConfig()->widescreen ? 1 : 0;
+    if (d >= 0x00010000u && d < 0x04000000u
+        && *(volatile uint8_t *)((uintptr_t)(d + 0x274) + g_xbox_mem_offset) != want)
+        *(volatile uint8_t *)((uintptr_t)(d + 0x274) + g_xbox_mem_offset) = want;
+}
+
 static void dm_input_filter(DWORD port, XBOX_INPUT_STATE *st)
 {
     if (port != 0)
         return;
+    sims_widescreen_sync();
 #ifdef RECOMP_CALL_PROFILE
     sims_prof_input(st);
 #endif
@@ -1386,7 +1401,7 @@ static void dm_orbit_camera(uint32_t cam, float px, float py, float stick_fwd)
         float turn;
         rx = (rx > 0 ? rx - 0.25f : rx + 0.25f) / 0.75f;
         turn = rx * DM_ORBIT_RATE * dt;
-        yaw += turn;
+        yaw -= turn;                       /* stick right: the view turns right */
     }
     /* Following her: a camera on a leash. Her step since the last frame
      * pulls the camera's line of sight round by exactly the angle it makes

@@ -42,6 +42,7 @@
  * Morton order, not a second one that can disagree with it. */
 #include "../d3d/d3d8_swizzle.h"
 #include "nv2a_vsh_interp.h"
+#include "video/gfx_config.h"
 #include "nv2a_combiner.h"
 #include "nv2a_backend.h"
 #if defined(_MSC_VER)
@@ -3711,6 +3712,31 @@ static int gpu_batch_program(uint32_t n)
     vs.fog_mode = s_gpu.fog_mode;
     vs.fog_param[0] = s_gpu.fog_param[0];
     vs.fog_param[1] = s_gpu.fog_param[1];
+    if (xbox_GfxConfig()->widescreen) {
+        /* Where the vertices land: run on the CPU, first vertex only unless
+         * its w is 1 (flat 2D: overlays, text -- few vertices). A back end
+         * uses it to tell a 2D overlay from 3D. */
+        float in[NV2A_VSH_INPUTS][4];
+        Nv2aVshOutput o;
+        uint32_t a, lim = nv < 4096 ? nv : 4096;
+        vs.box[0] = vs.box[1] = 1e30f; vs.box[2] = vs.box[3] = -1e30f;
+        vs.wmin = 1e30f; vs.wmax = -1e30f;
+        memset(in, 0, sizeof in);
+        for (i = 0; i < lim; i++) {
+            for (a = 0; a < nattr; a++)
+                memcpy(in[attrs[a]], vin + (size_t)i * stride + a * 4, 4 * sizeof(float));
+            if (!nv2a_vsh_run((const float (*)[4])in, &o))
+                break;
+            if (o.pos[0] < vs.box[0]) vs.box[0] = o.pos[0];
+            if (o.pos[1] < vs.box[1]) vs.box[1] = o.pos[1];
+            if (o.pos[0] > vs.box[2]) vs.box[2] = o.pos[0];
+            if (o.pos[1] > vs.box[3]) vs.box[3] = o.pos[1];
+            if (o.pos[3] < vs.wmin) vs.wmin = o.pos[3];
+            if (o.pos[3] > vs.wmax) vs.wmax = o.pos[3];
+            if (o.pos[3] != 1.0f) { i = lim; break; }   /* 3D: enough known */
+        }
+        vs.probed = i == lim && (nv <= lim || vs.wmax != 1.0f);
+    }
     if (!s_gpub->draw_vsh(&st, &vs, vin, nv, vidx, ni))
         return 0;
     s_gpu.batches_program++;

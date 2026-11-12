@@ -10,6 +10,13 @@
  *   RECOMP_SHOW_FPS     0/1  frame-rate counter in the window
  *   RECOMP_TEX_DUMP     0/1  save each texture once to textures\dump\*.png
  *   RECOMP_TEX_REPLACE  0/1  use textures\replace\<same name>.png instead
+ *   RECOMP_WIDESCREEN   0/1  16:9: the picture is shown 16:9 and flat 2D
+ *                            overlays keep their shape; the title's own code
+ *                            makes it draw the wider view (for The Sims
+ *                            Bustin' Out, its display object's widescreen
+ *                            flag: reporting a widescreen TV at boot instead
+ *                            stalls its D3D set-up)
+ *   RECOMP_MSAA         1/2/4/8  multisample antialiasing (GPU renderer)
  */
 #ifndef XBOXRECOMP_GFX_CONFIG_H
 #define XBOXRECOMP_GFX_CONFIG_H
@@ -23,7 +30,9 @@ typedef struct {
     volatile int tex_dump;
     volatile int tex_replace;
     volatile int reload_seq;         /* bumped: re-read textures\replace */
-    volatile int fps60;              /* experimental: 120 Hz vblank (RECOMP_FPS60) */
+    volatile int fps60;
+    volatile int widescreen;         /* 16:9 (RECOMP_WIDESCREEN) */
+    volatile int msaa;               /* samples per pixel: 1, 2, 4, 8 (RECOMP_MSAA) */              /* experimental: 120 Hz vblank (RECOMP_FPS60) */
     volatile int direct_move;        /* title option: left stick moves the character (SIMS_DIRECT_MOVE) */
     volatile int cam_dist;           /* title option: follow camera distance, tenths of a tile (SIMS_CAM_DIST) */
     volatile int cam_angle;          /* ... looking down, degrees (SIMS_CAM_ANGLE) */
@@ -32,11 +41,17 @@ typedef struct {
     /* reported by the back end */
     volatile int gpu_active;         /* 0: software renderer (no scaling) */
     volatile int scale_applied;
+    volatile int msaa_applied;       /* what the GPU supports of msaa */
     volatile int dumped, replaced, replacements_found;
     char adapter[128];
 } XboxGfxConfig;
 
 XboxGfxConfig *xbox_GfxConfig(void);
+
+/* The shape to show a w x h frame in: 16:9 when widescreen is on (the title
+ * drew it squeezed into its 4:3 frame, as for a widescreen TV), else w:h.
+ * Fills *aw, *ah with a width and height of that shape. */
+void xbox_DisplayShape(uint32_t w, uint32_t h, uint32_t *aw, uint32_t *ah);
 
 /* A frame rendered above 640x480: the window shows it instead of the guest
  * framebuffer copy that follows (unless the video overlay is in use). */

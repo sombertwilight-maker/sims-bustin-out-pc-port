@@ -247,6 +247,10 @@ XboxGfxConfig *xbox_GfxConfig(void)
         s_gfx.tex_dump = env_int("RECOMP_TEX_DUMP", 0, 0, 1);
         s_gfx.tex_replace = env_int("RECOMP_TEX_REPLACE", 0, 0, 1);
         s_gfx.fps60 = env_int("RECOMP_FPS60", 0, 0, 1);
+        s_gfx.widescreen = env_int("RECOMP_WIDESCREEN", 0, 0, 1);
+        s_gfx.msaa = env_int("RECOMP_MSAA", 1, 1, 8);
+        if (s_gfx.msaa != 2 && s_gfx.msaa != 4 && s_gfx.msaa != 8)
+            s_gfx.msaa = 1;
         s_gfx.direct_move = env_int("SIMS_DIRECT_MOVE", 0, 0, 1);
         s_gfx.cam_dist = env_int("SIMS_CAM_DIST", 55, 15, 200);
         s_gfx.cam_angle = env_int("SIMS_CAM_ANGLE", 35, 5, 80);
@@ -254,6 +258,15 @@ XboxGfxConfig *xbox_GfxConfig(void)
         s_gfx.cam_follow = env_int("SIMS_CAM_FOLLOW", 2, 0, 3);
     }
     return &s_gfx;
+}
+
+void xbox_DisplayShape(uint32_t w, uint32_t h, uint32_t *aw, uint32_t *ah)
+{
+    if (xbox_GfxConfig()->widescreen && w && h) {
+        *aw = h * 16; *ah = h * 9;          /* any frame size: shown 16:9 */
+    } else {
+        *aw = w; *ah = h;
+    }
 }
 
 /* Rewrite (or add) NAME=value in settings.ini beside the exe, keeping every
@@ -351,7 +364,7 @@ static const uint32_t *hires_frame(uint32_t *w, uint32_t *h)
 }
 
 /* The menu. */
-enum { MENU_SCALE, MENU_FPS60, MENU_DM, MENU_CAMDIST, MENU_CAMANGLE, MENU_CAMAIM, MENU_CAMFOLLOW, MENU_FPS,
+enum { MENU_SCALE, MENU_WIDE, MENU_AA, MENU_FPS60, MENU_DM, MENU_CAMDIST, MENU_CAMANGLE, MENU_CAMAIM, MENU_CAMFOLLOW, MENU_FPS,
        MENU_DUMP, MENU_REPLACE, MENU_RELOAD, MENU_CLOSE, MENU_N };
 static int s_menu_open, s_menu_sel;
 static double s_fps_now;
@@ -364,6 +377,18 @@ static void menu_change(int item, int dir)
         g->scale = ((g->scale - 1 + dir + 4) % 4) + 1;
         settings_save("RECOMP_GPU_SCALE", g->scale);
         break;
+    case MENU_WIDE:
+        g->widescreen = !g->widescreen;
+        settings_save("RECOMP_WIDESCREEN", g->widescreen);
+        break;
+    case MENU_AA: {
+        static const int steps[4] = { 1, 2, 4, 8 };
+        int k = 0;
+        while (k < 3 && steps[k] != g->msaa) k++;
+        g->msaa = steps[(k + dir + 4) % 4];
+        settings_save("RECOMP_MSAA", g->msaa);
+        break;
+    }
     case MENU_FPS60:
         g->fps60 = !g->fps60;
         settings_save("RECOMP_FPS60", g->fps60);
@@ -559,7 +584,7 @@ static void overlay_draw(HDC dc, int cw, int ch)
     }
     if (s_menu_open) {
         static const char *names[MENU_N] = {
-            "Internal resolution", "Frame rate", "Left stick", "  Camera distance", "  Camera angle",
+            "Internal resolution", "Widescreen", "Antialiasing", "Frame rate", "Left stick", "  Camera distance", "  Camera angle",
             "  Camera aim height", "  Camera follows her", "Show FPS", "Dump textures", "Replace textures",
             "Reload replacement textures", "Close menu"
         };
@@ -589,7 +614,16 @@ static void overlay_draw(HDC dc, int cw, int ch)
             switch (i) {
             case MENU_SCALE:
                 if (!g->gpu_active) snprintf(t, sizeof t, "1x (software renderer)");
-                else snprintf(t, sizeof t, "< %dx  %dx%d >", g->scale, 640 * g->scale, 480 * g->scale);
+                else snprintf(t, sizeof t, "< %dx  %dx%d >", g->scale,
+                              (g->widescreen ? 853 : 640) * g->scale, 480 * g->scale);
+                break;
+            case MENU_WIDE:    snprintf(t, sizeof t, "%s", g->widescreen ? "16:9" : "Off (4:3)"); break;
+            case MENU_AA:
+                if (!g->gpu_active) snprintf(t, sizeof t, "Off (software renderer)");
+                else if (g->msaa <= 1) snprintf(t, sizeof t, "< Off >");
+                else if (g->msaa_applied && g->msaa_applied != g->msaa)
+                    snprintf(t, sizeof t, "< %dx MSAA (%dx here) >", g->msaa, g->msaa_applied);
+                else snprintf(t, sizeof t, "< %dx MSAA >", g->msaa);
                 break;
             case MENU_FPS60:   snprintf(t, sizeof t, "%s", g->fps60 ? "60 (experimental)" : "30 (original)"); break;
             case MENU_DM:      snprintf(t, sizeof t, "%s", g->direct_move ? "Moves your Sim" : "Moves the cursor"); break;
@@ -653,10 +687,14 @@ static void composed_blit(HWND hwnd, HDC hdc, const uint32_t *px, uint32_t w, ui
         mw = cw; mh = ch;
     }
     FillRect(mdc, &c, (HBRUSH)GetStockObject(BLACK_BRUSH));
-    if ((long long)cw * h <= (long long)ch * w) {
-        dw = cw; dh = (LONG)((long long)cw * h / w);
-    } else {
-        dh = ch; dw = (LONG)((long long)ch * w / h);
+    {
+        uint32_t aw, ah;
+        xbox_DisplayShape(w, h, &aw, &ah);
+        if ((long long)cw * ah <= (long long)ch * aw) {
+            dw = cw; dh = (LONG)((long long)cw * ah / aw);
+        } else {
+            dh = ch; dw = (LONG)((long long)ch * aw / ah);
+        }
     }
     memset(&bi, 0, sizeof bi);
     bi.bmiHeader.biSize = sizeof bi.bmiHeader;
@@ -1025,10 +1063,19 @@ static void gdi_blit(HWND hwnd, HDC hdc, const BITMAPINFO *bi)
         FillRect(hdc, &c, (HBRUSH)GetStockObject(BLACK_BRUSH));
         lw = cw; lh = ch;
     }
-    if ((long long)cw * s_fb_height <= (long long)ch * s_fb_width) {
-        w = cw; h = (LONG)((long long)cw * s_fb_height / s_fb_width);
-    } else {
-        h = ch; w = (LONG)((long long)ch * s_fb_width / s_fb_height);
+    {
+        uint32_t aw, ah;
+        static int lwide = -1;
+        xbox_DisplayShape(s_fb_width, s_fb_height, &aw, &ah);
+        if (lwide != xbox_GfxConfig()->widescreen) {   /* new borders */
+            lwide = xbox_GfxConfig()->widescreen;
+            FillRect(hdc, &c, (HBRUSH)GetStockObject(BLACK_BRUSH));
+        }
+        if ((long long)cw * ah <= (long long)ch * aw) {
+            w = cw; h = (LONG)((long long)cw * ah / aw);
+        } else {
+            h = ch; w = (LONG)((long long)ch * aw / ah);
+        }
     }
     SetStretchBltMode(hdc, HALFTONE);
     SetBrushOrgEx(hdc, 0, 0, NULL);     /* HALFTONE wants it after the mode */
@@ -1090,7 +1137,10 @@ static DWORD WINAPI fb_thread(LPVOID unused)
         }
         for (;; scale--) {
             r.left = 0; r.top = 0;
-            r.right = (LONG)s_fb_width * scale; r.bottom = (LONG)s_fb_height * scale;
+            uint32_t aw, ah;
+            xbox_DisplayShape(s_fb_width, s_fb_height, &aw, &ah);
+            r.right = (LONG)((uint64_t)s_fb_height * aw / ah) * scale;
+            r.bottom = (LONG)s_fb_height * scale;
             AdjustWindowRect(&r, WS_OVERLAPPEDWINDOW, FALSE);
             if (scale <= 1 || (r.right - r.left <= work.right - work.left
                                && r.bottom - r.top <= work.bottom - work.top))

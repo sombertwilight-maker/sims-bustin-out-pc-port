@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gpu_present.h"
+#include "gfx_config.h"
 
 static ID3D11Device             *s_dev;
 static ID3D11DeviceContext      *s_ctx;
@@ -195,10 +196,14 @@ int gpu_present_frame(const uint32_t *pixels)
     ID3D11DeviceContext_OMSetRenderTargets(s_ctx, 1, &s_rtv, NULL);
     ID3D11DeviceContext_ClearRenderTargetView(s_ctx, s_rtv, black);
     /* The largest rectangle of the frame's shape that fits, centred. */
-    sx = (float)s_bw / (float)s_w;
-    sy = (float)s_bh / (float)s_h;
-    vp.Width = (float)s_w * (sx < sy ? sx : sy);
-    vp.Height = (float)s_h * (sx < sy ? sx : sy);
+    {
+        uint32_t aw, ah;
+        xbox_DisplayShape(s_w, s_h, &aw, &ah);
+        sx = (float)s_bw / (float)aw;
+        sy = (float)s_bh / (float)ah;
+        vp.Width = (float)aw * (sx < sy ? sx : sy);
+        vp.Height = (float)ah * (sx < sy ? sx : sy);
+    }
     vp.TopLeftX = ((float)s_bw - vp.Width) * 0.5f;
     vp.TopLeftY = ((float)s_bh - vp.Height) * 0.5f;
     vp.MinDepth = 0; vp.MaxDepth = 1;

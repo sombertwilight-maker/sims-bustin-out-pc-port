@@ -43,6 +43,15 @@ GRAPHICS MENU (F6)
 ------------------
 Press F6 in the game window. Arrow keys select and change, F6 closes.
   Internal resolution  1x-4x (640x480 up to 2560x1920), drawn on your GPU
+  Widescreen           16:9 turns on the game's own widescreen mode: you see
+                       more of the room at the sides, at full sharpness. The
+                       HUD, menus and text keep their shape, laid out in the
+                       middle 4:3 area as the game designed them. Changes
+                       straight away.
+  Antialiasing         Off, 2x, 4x or 8x MSAA: smooths jagged edges on the 3D
+                       world. Costs GPU time; 4x is a good choice on most
+                       cards. If your card can't do the number you pick, the
+                       menu shows what it uses instead.
   Frame rate           30 (original) or 60 (experimental); also caps the menus
   Left stick           EXPERIMENTAL: "Moves your Sim" turns on direct
                        movement (see below). Off by default.
@@ -67,7 +76,8 @@ With F6 > Left stick set to "Moves your Sim":
                 furniture and walls; doors open as she reaches them and
                 close behind her. Moving the stick while she is busy
                 cancels what she is doing (so she can get out of the bath).
-  Right stick   left/right orbits the camera round her, up/down zooms.
+  Right stick   left/right turns the camera round her (right: look right),
+                up/down zooms.
   A             if something is lit up (glowing gold) under her, opens its
                 menu as usual. Otherwise it lists everything she can use
                 nearby, in the game's own bubbles; pick one with the stick

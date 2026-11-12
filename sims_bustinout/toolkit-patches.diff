@@ -1,6 +1,6 @@
-diff -ruN xboxrecomp-0.17.0/src/apu/apu_core.c xboxrecomp-0.17.0.patched/src/apu/apu_core.c
---- xboxrecomp-0.17.0/src/apu/apu_core.c	2026-11-10 14:39:39.547562511 -0500
-+++ xboxrecomp-0.17.0.patched/src/apu/apu_core.c	2026-11-09 08:54:10.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/apu/apu_core.c src/apu/apu_core.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/apu/apu_core.c	2026-11-06 02:27:36.000000000 -0500
++++ src/apu/apu_core.c	2026-11-09 08:54:10.608835832 -0500
 @@ -1263,6 +1263,25 @@
              update_irq(d);
              d->set_irq = false;
@@ -27,9 +27,9 @@ diff -ruN xboxrecomp-0.17.0/src/apu/apu_core.c xboxrecomp-0.17.0.patched/src/apu
          apu_deliver_irq(d);
          apu_irq_stats_line();
  
-diff -ruN xboxrecomp-0.17.0/src/apu/apu_vp.c xboxrecomp-0.17.0.patched/src/apu/apu_vp.c
---- xboxrecomp-0.17.0/src/apu/apu_vp.c	2026-11-10 14:39:39.685391537 -0500
-+++ xboxrecomp-0.17.0.patched/src/apu/apu_vp.c	2026-11-09 08:54:10.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/apu/apu_vp.c src/apu/apu_vp.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/apu/apu_vp.c	2026-11-06 02:27:36.000000000 -0500
++++ src/apu/apu_vp.c	2026-11-09 08:54:10.608216803 -0500
 @@ -189,6 +189,7 @@
   * Front-End method dispatch
   * ============================================================ */
@@ -46,9 +46,9 @@ diff -ruN xboxrecomp-0.17.0/src/apu/apu_vp.c xboxrecomp-0.17.0.patched/src/apu/a
          if (d->regs[NV_PAPU_FETFORCE1] & NV_PAPU_FETFORCE1_SE2FE_IDLE_VOICE) {
              d->regs[NV_PAPU_FECTL] &= ~NV_PAPU_FECTL_FEMETHMODE;
              d->regs[NV_PAPU_FECTL] |= NV_PAPU_FECTL_FEMETHMODE_TRAPPED;
-diff -ruN xboxrecomp-0.17.0/src/input/xinput_device.c xboxrecomp-0.17.0.patched/src/input/xinput_device.c
---- xboxrecomp-0.17.0/src/input/xinput_device.c	2026-11-10 14:39:39.694294781 -0500
-+++ xboxrecomp-0.17.0.patched/src/input/xinput_device.c	2026-11-09 21:15:00.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/input/xinput_device.c src/input/xinput_device.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/input/xinput_device.c	2026-11-06 02:27:36.000000000 -0500
++++ src/input/xinput_device.c	2026-11-09 21:15:00.244722671 -0500
 @@ -71,8 +71,21 @@
      }
  }
@@ -71,9 +71,9 @@ diff -ruN xboxrecomp-0.17.0/src/input/xinput_device.c xboxrecomp-0.17.0.patched/
      XINPUT_STATE xi_state;
      DWORD result;
  
-diff -ruN xboxrecomp-0.17.0/src/input/xinput_xbox.h xboxrecomp-0.17.0.patched/src/input/xinput_xbox.h
---- xboxrecomp-0.17.0/src/input/xinput_xbox.h	2026-11-10 14:39:39.694387337 -0500
-+++ xboxrecomp-0.17.0.patched/src/input/xinput_xbox.h	2026-11-09 21:15:05.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/input/xinput_xbox.h src/input/xinput_xbox.h
+--- /tmp/orig/xboxrecomp-0.17.0/src/input/xinput_xbox.h	2026-11-06 02:27:36.000000000 -0500
++++ src/input/xinput_xbox.h	2026-11-09 21:15:05.316731182 -0500
 @@ -93,6 +93,9 @@
   * Port: 0-3 (Xbox controller ports)
   */
@@ -84,9 +84,9 @@ diff -ruN xboxrecomp-0.17.0/src/input/xinput_xbox.h xboxrecomp-0.17.0.patched/sr
  
  /**
   * Set controller vibration.
-diff -ruN xboxrecomp-0.17.0/src/kernel/CMakeLists.txt xboxrecomp-0.17.0.patched/src/kernel/CMakeLists.txt
---- xboxrecomp-0.17.0/src/kernel/CMakeLists.txt	2026-11-10 14:39:39.694523712 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/CMakeLists.txt	2026-11-09 17:24:29.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/CMakeLists.txt src/kernel/CMakeLists.txt
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/CMakeLists.txt	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/CMakeLists.txt	2026-11-09 17:24:29.885661717 -0500
 @@ -31,6 +31,7 @@
      nv2a_flip_hold.c
      nv2a_vsh_interp.c
@@ -104,9 +104,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/CMakeLists.txt xboxrecomp-0.17.0.patched/
  else()
      # Linux: platform layer (POSIX host primitives) + OpenSSL for crypto.
      find_package(OpenSSL REQUIRED)
-diff -ruN xboxrecomp-0.17.0/src/kernel/kernel_bridge.c xboxrecomp-0.17.0.patched/src/kernel/kernel_bridge.c
---- xboxrecomp-0.17.0/src/kernel/kernel_bridge.c	2026-11-10 14:39:39.857391547 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/kernel_bridge.c	2026-11-09 20:55:26.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/kernel_bridge.c src/kernel/kernel_bridge.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/kernel_bridge.c	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/kernel_bridge.c	2026-11-09 20:55:26.438136852 -0500
 @@ -792,13 +792,35 @@
   * an extra reference until the handle token owns one, so a worker that ends
   * at once cannot free it underneath us. The KE shadow gets its own duplicate
@@ -748,10 +748,10 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/kernel_bridge.c xboxrecomp-0.17.0.patched
 +    if (e && *e && *e != '0')
 +        CloseHandle(CreateThread(NULL, 0, mw_thread, NULL, 0, NULL));
 +}
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_backend.h xboxrecomp-0.17.0.patched/src/kernel/nv2a_backend.h
---- xboxrecomp-0.17.0/src/kernel/nv2a_backend.h	2026-11-10 14:39:39.985038163 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_backend.h	2026-11-09 13:24:35.000000000 -0500
-@@ -89,6 +89,19 @@
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_backend.h src/kernel/nv2a_backend.h
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_backend.h	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/nv2a_backend.h	2026-11-12 06:19:01.407264887 -0500
+@@ -89,6 +89,25 @@
      const Nv2aRenderState *state;
  } Nv2aBatch;
  
@@ -766,12 +766,18 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_backend.h xboxrecomp-0.17.0.patched/
 +    uint32_t near_z;               /* clip at it (RECOMP_CLIP_NEAR_Z)       */
 +    uint32_t fog_enable, fog_mode; /* fog_factor's inputs                   */
 +    float    fog_param[2];
++    /* Small batches only (probed != 0): the screen-space box the program puts
++     * the vertices in, and the range of their w, found by running it on the
++     * CPU -- how a back end tells a flat 2D overlay from a 3D draw. */
++    uint32_t probed;
++    float    box[4];               /* x0 y0 x1 y1, surface pixels           */
++    float    wmin, wmax;
 +} Nv2aGpuVsh;
 +
  typedef struct {
      /* flags: CLEAR_SURFACE bits (Z 0x1, stencil 0x2, colour 0xF0).
       * zstencil: SET_ZSTENCIL_CLEAR_VALUE (depth in the top 24 bits for Z24S8). */
-@@ -127,4 +140,95 @@
+@@ -127,4 +146,95 @@
   * the semaphore context DMA object through RAMIN. */
  void nv2a_pb_set_semaphore_target(uint32_t guest_va);
  
@@ -867,10 +873,10 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_backend.h xboxrecomp-0.17.0.patched/
 +                            uint32_t *argb_out);
 +
  #endif /* NV2A_BACKEND_H */
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/src/kernel/nv2a_d3d11.c
---- xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c	1969-12-31 19:00:00.000000000 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_d3d11.c	2026-11-09 19:50:55.000000000 -0500
-@@ -0,0 +1,2501 @@
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c src/kernel/nv2a_d3d11.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c	1969-12-31 19:00:00.000000000 -0500
++++ src/kernel/nv2a_d3d11.c	2026-11-12 07:44:21.454438953 -0500
+@@ -0,0 +1,2705 @@
 +/*
 + * NV2A on the host GPU: a Direct3D 11 back end for the pushbuffer executor.
 + *
@@ -922,7 +928,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +static int s_stats = -1;
 +
 +static struct {
-+    uint32_t draws, verts, clears, tex_uploads, tex_hits_rt, shaders, readbacks;
++    uint32_t draws, verts, clears, tex_uploads, tex_hits_rt, shaders, readbacks, rt_stale;
 +    uint32_t vsh_draws, vprogs, const_uploads;
 +    uint64_t tex_bytes;
 +} S;
@@ -1318,18 +1324,39 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +/* ---- render targets and depth buffers ----------------------------------- */
 +
 +/* w, h: the target in the title's pixels; pw, ph: as allocated, times the
-+ * internal-resolution scale. Everything the title sees (texture coordinates,
-+ * the vertex mapping) uses w, h; the viewport, scissor, depth buffer and
-+ * readback use pw, ph. */
++ * internal-resolution scale (and 4/3 wider for a screen-sized target in
++ * widescreen: the title squeezes a 16:9 view into its 4:3 frame, so the
++ * extra columns make the stretched picture as sharp across as down).
++ * Everything the title sees (texture coordinates, the vertex mapping) uses
++ * w, h; the viewport, scissor, depth buffer and readback use pw, ph.
++ *
++ * With multisampling, drawing goes into `ms` (through rtv) and t is its
++ * resolved copy, brought up to date (rt_resolve) before anything reads it:
++ * sampling as a texture, presenting, the copy for guest memory. */
 +typedef struct {
 +    uint32_t va, w, h, swizzled, pw, ph;
-+    ID3D11Texture2D *t;
-+    ID3D11RenderTargetView *rtv;
++    ID3D11Texture2D *t, *ms;
++    ID3D11RenderTargetView *rtv;          /* drawn into: ms's view, or rrtv */
++    ID3D11RenderTargetView *rrtv;         /* t's own view                   */
 +    ID3D11ShaderResourceView *srv;
 +    uint32_t used;
++    int dirty;                            /* ms drawn since the last resolve */
++    int wide;                             /* pw is 4/3 of w * scale         */
++    uint32_t bytes;                       /* guest memory it covers         */
++    uint64_t ghash;                       /* that memory when last drawn    */
++    int shown;                            /* presented: guest memory gets it */
 +} RtEnt;
 +
 +static uint32_t s_scale = 1;             /* internal resolution, applied */
++static uint32_t s_msaa = 1;              /* samples per pixel, applied   */
++static int s_wide;                       /* widescreen, applied          */
++/* Widescreen overlays: whether the frame drawn before this one had 3D in it
++ * (then a full-screen flat quad is an effect over the scene and stays full
++ * width; in a menu it is a backdrop and keeps its shape like the rest). */
++static int s_world_cur, s_world_prev;
++/* The current draw's clip box is a small inset (a portrait in the HUD):
++ * how far it moves sideways, title pixels, to stay with the HUD around it. */
++static float s_inset_dx;
 +
 +typedef struct {
 +    uint32_t va, w, h;
@@ -1342,32 +1369,79 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +static RtEnt s_rt[MAX_RT];
 +static DsEnt s_ds[16];
 +
-+static int make_rt(RtEnt *e, uint32_t w, uint32_t h)
++static void k_reset(void);
++static void free_rt(RtEnt *e)
++{
++    k_reset();
++    if (e->srv) ID3D11ShaderResourceView_Release(e->srv);
++    if (e->rtv && e->rtv != e->rrtv) ID3D11RenderTargetView_Release(e->rtv);
++    if (e->rrtv) ID3D11RenderTargetView_Release(e->rrtv);
++    if (e->ms) ID3D11Texture2D_Release(e->ms);
++    if (e->t) ID3D11Texture2D_Release(e->t);
++    memset(e, 0, sizeof *e);
++}
++
++/* plain: 1x, one sample, never widened (the copy for guest memory). */
++static int make_rt_ex(RtEnt *e, uint32_t w, uint32_t h, int plain)
 +{
 +    D3D11_TEXTURE2D_DESC td;
++    uint32_t sc = plain ? 1 : s_scale;
++    /* Screen-shaped (4:3 to 3:2, full size) targets only: a square or small
++     * one is a texture the title draws, not the picture. */
++    int wide = !plain && s_wide && h >= 384 && w * 4 >= h * 5 && w * 2 <= h * 3;
++    memset(e, 0, sizeof *e);
++    e->w = w; e->h = h; e->wide = wide;
++    e->pw = wide ? (w * sc * 4 + 1) / 3 : w * sc;
++    e->ph = h * sc;
 +    memset(&td, 0, sizeof td);
-+    td.Width = w * s_scale; td.Height = h * s_scale; td.MipLevels = 1; td.ArraySize = 1;
++    td.Width = e->pw; td.Height = e->ph; td.MipLevels = 1; td.ArraySize = 1;
 +    td.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 +    td.SampleDesc.Count = 1;
 +    td.Usage = D3D11_USAGE_DEFAULT;
 +    td.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 +    if (FAILED(ID3D11Device_CreateTexture2D(D, &td, NULL, &e->t)))
 +        return 0;
-+    ID3D11Device_CreateRenderTargetView(D, (ID3D11Resource *)e->t, NULL, &e->rtv);
++    ID3D11Device_CreateRenderTargetView(D, (ID3D11Resource *)e->t, NULL, &e->rrtv);
 +    ID3D11Device_CreateShaderResourceView(D, (ID3D11Resource *)e->t, NULL, &e->srv);
-+    e->w = w; e->h = h;
-+    e->pw = w * s_scale; e->ph = h * s_scale;
++    e->rtv = e->rrtv;
++    if (!plain && s_msaa > 1) {
++        td.SampleDesc.Count = s_msaa;
++        td.BindFlags = D3D11_BIND_RENDER_TARGET;
++        if (SUCCEEDED(ID3D11Device_CreateTexture2D(D, &td, NULL, &e->ms))
++            && FAILED(ID3D11Device_CreateRenderTargetView(D, (ID3D11Resource *)e->ms, NULL, &e->rtv))) {
++            ID3D11Texture2D_Release(e->ms);
++            e->ms = NULL;
++        }
++        if (!e->ms)
++            e->rtv = e->rrtv;
++    }
 +    return 1;
 +}
 +
-+static void k_reset(void);
-+static void free_rt(RtEnt *e)
++static int make_rt(RtEnt *e, uint32_t w, uint32_t h) { return make_rt_ex(e, w, h, 0); }
++
++/* The multisampled pixels into t, if drawn since last time. */
++static void rt_resolve(RtEnt *e)
 +{
-+    k_reset();
-+    if (e->srv) ID3D11ShaderResourceView_Release(e->srv);
-+    if (e->rtv) ID3D11RenderTargetView_Release(e->rtv);
-+    if (e->t) ID3D11Texture2D_Release(e->t);
-+    memset(e, 0, sizeof *e);
++    if (e->ms && e->dirty) {
++        ID3D11DeviceContext_ResolveSubresource(C, (ID3D11Resource *)e->t, 0, (ID3D11Resource *)e->ms,
++                                               0, DXGI_FORMAT_B8G8R8A8_UNORM);
++        e->dirty = 0;
++    }
++}
++
++static void blit(ID3D11RenderTargetView *rtv, ID3D11ShaderResourceView *srv,
++                 float u, float v, float x, float y, float w, float h,
++                 ID3D11SamplerState *smp, ID3D11BlendState *bs);
++static int blit_init(void);
++static ID3D11SamplerState *s_blit_pt;
++
++/* t written directly (seeded, carried over): the same into ms. */
++static void rt_push(RtEnt *e)
++{
++    if (e->ms && blit_init())
++        blit(e->rtv, e->srv, 1.0f, 1.0f, 0, 0, (float)e->pw, (float)e->ph, s_blit_pt, NULL);
++    e->dirty = 0;
 +}
 +
 +/* A new render target starts as what guest memory holds there, so a surface
@@ -1396,13 +1470,14 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +                    | ((t & 0x07E0u) << 5) | ((t & 0x001Fu) << 3);
 +            }
 +    }
-+    if (s_scale > 1) {
-+        /* Each texel repeated scale x scale times. */
++    if (e->pw != e->w || e->ph != e->h) {
++        /* Each texel repeated to fill the bigger target. */
 +        uint32_t *big = (uint32_t *)malloc((size_t)e->pw * e->ph * 4), sx;
 +        if (big) {
 +            for (y = 0; y < e->ph; y++)
 +                for (sx = 0; sx < e->pw; sx++)
-+                    big[(size_t)y * e->pw + sx] = px[(size_t)(y / s_scale) * e->w + sx / s_scale];
++                    big[(size_t)y * e->pw + sx] = px[(size_t)(y * e->h / e->ph) * e->w
++                                                     + (size_t)sx * e->w / e->pw];
 +            ID3D11DeviceContext_UpdateSubresource(C, (ID3D11Resource *)e->t, 0, NULL, big,
 +                                                  e->pw * 4, 0);
 +            free(big);
@@ -1412,6 +1487,22 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +                                              e->w * 4, 0);
 +    }
 +    free(px);
++    rt_push(e);
++}
++
++/* Guest memory under a target, sampled. The GPU path never writes it (but
++ * for a presented frame), so if it changed, the CPU put something else
++ * there: a texture loaded where an old target was. */
++static uint64_t rt_mem_hash(const RtEnt *e)
++{
++    const uint8_t *p = gmem() + e->va;
++    uint32_t n = e->bytes, k, step;
++    uint64_t h = 0x9E37u;
++    if (n < 64) return 0;
++    step = (n - 32) / 63;
++    for (k = 0; k < 64; k++)
++        h = hash_bytes(p + (size_t)k * step, 32, h);
++    return h;
 +}
 +
 +static RtEnt *find_rt(uint32_t va)
@@ -1452,16 +1543,19 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +            if (h < e->h) h = e->h;
 +            if (!make_rt(&n, w, h))
 +                return e;
-+            if (e->swizzled == st->swizzled) {
++            if (e->swizzled == st->swizzled && n.pw >= e->pw && n.ph >= e->ph) {
 +                D3D11_BOX box = { 0, 0, 0, e->pw, e->ph, 1 };
++                rt_resolve(e);
 +                ID3D11DeviceContext_CopySubresourceRegion(C, (ID3D11Resource *)n.t, 0, 0, 0, 0,
 +                                                          (ID3D11Resource *)e->t, 0, &box);
++                rt_push(&n);
 +            }
 +            free_rt(e);
 +            *e = n;
 +            e->va = st->color_va;
 +            e->swizzled = st->swizzled;
 +            e->used = s_frame;
++            e->bytes = (st->swizzled ? w * (st->bpp ? st->bpp : 4) : st->pitch) * h;
 +            return e;
 +        }
 +    }
@@ -1477,6 +1571,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +    e->va = st->color_va;
 +    e->swizzled = st->swizzled;
 +    e->used = s_frame;
++    e->bytes = (st->swizzled ? w * (st->bpp ? st->bpp : 4) : st->pitch) * h;
 +    rt_seed_from_guest(e, st);
 +    return e;
 +}
@@ -1514,7 +1609,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +    memset(&td, 0, sizeof td);
 +    td.Width = w; td.Height = h; td.MipLevels = 1; td.ArraySize = 1;
 +    td.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-+    td.SampleDesc.Count = 1;
++    td.SampleDesc.Count = s_msaa;          /* as every target drawn with it */
 +    td.Usage = D3D11_USAGE_DEFAULT;
 +    td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 +    if (FAILED(ID3D11Device_CreateTexture2D(D, &td, NULL, &s_ds[slot].t)))
@@ -2169,9 +2264,29 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +    vp.Width = (float)rt->pw; vp.Height = (float)rt->ph;
 +    vp.MinDepth = 0; vp.MaxDepth = 1;
 +
-+    sc.left = (LONG)(rect[0] * s_scale); sc.top = (LONG)(rect[1] * s_scale);
-+    sc.right = (LONG)((rect[2] < rt->w ? rect[2] : rt->w) * s_scale);
-+    sc.bottom = (LONG)((rect[3] < rt->h ? rect[3] : rt->h) * s_scale);
++    {
++        float fx = (float)rt->pw / (float)rt->w, fy = (float)rt->ph / (float)rt->h;
++        float r2 = (float)(rect[2] < rt->w ? rect[2] : rt->w);
++        float r3 = (float)(rect[3] < rt->h ? rect[3] : rt->h);
++        float l = (float)rect[0];
++        s_inset_dx = 0;
++        if (rt->wide && (r2 - l) * 2 < (float)rt->w && (r3 - (float)rect[1]) * 2 < (float)rt->h) {
++            /* Where overlay_fit puts this spot of the 4:3 layout, 3/4 as
++             * wide like the HUD drawn round it (which in 4:3 covers the
++             * box's corners: a portrait's background is a cleared box). */
++            float c = (l + r2) * 0.5f, hw = (r2 - l) * 0.375f;
++            s_inset_dx = ((float)rt->w * 0.5f - c) * 0.25f;
++            l = c + s_inset_dx - hw; r2 = c + s_inset_dx + hw;
++            if (l < 0) l = 0;
++            if (r2 > (float)rt->w) r2 = (float)rt->w;
++        }
++        sc.left = (LONG)(l * fx + 0.5f); sc.top = (LONG)(rect[1] * fy + 0.5f);
++        sc.right = (LONG)(r2 * fx + 0.5f);
++        sc.bottom = (LONG)(r3 * fy + 0.5f);
++    }
++    rt->dirty = 1;
++    if (rt != s_cur_rt && !rt->shown)
++        rt->ghash = rt_mem_hash(rt);
 +    k_view(&vp, &sc);
 +    memset(s_vcb_data, 0, sizeof s_vcb_data);
 +    s_vcb_data[0] = 2.0f / (float)rt->w;
@@ -2185,6 +2300,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +
 +/* ---- the back end ------------------------------------------------------- */
 +
++static int dbg_logging(void);
 +static void d3d_clear(const Nv2aGpuState *st, uint32_t flags, uint32_t argb,
 +                      uint32_t zs, const uint32_t rect[4])
 +{
@@ -2196,6 +2312,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +
 +    if (!bind_surface(st, z || s, rect, &ds))
 +        return;
++    if (dbg_logging())
++        fprintf(stderr, "[CLEAR] rt %08X flags %X argb %08X rect %u %u %u %u\n", st->color_va, flags, argb,
++                rect[0], rect[1], rect[2], rect[3]);
 +    S.clears++;
 +    if (flags & 0x10) mask |= D3D11_COLOR_WRITE_ENABLE_BLUE;
 +    if (flags & 0x20) mask |= D3D11_COLOR_WRITE_ENABLE_GREEN;
@@ -2255,6 +2374,8 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 + * Draw numbers count setup_pixels calls from the start of a frame. */
 +static struct { int on, mode; uint32_t lo, hi; int log; FILETIME ft; uint32_t dix, flags; } s_dbg = { -1 };
 +/* flags: 1 unsampled stages read 0, 2 r0.a starts 0 without stage 0, 8 skip combiner draws with no texture stages, 16 print each new pixel shader */
++
++static int dbg_logging(void) { return s_dbg.log == 1; }
 +
 +static void dbg_poll(void)
 +{
@@ -2392,9 +2513,16 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +            continue;
 +        linear = st->bilinear || mag == 2 || min == 2 || min == 4 || min == 6;
 +        rt = t->cube ? NULL : find_rt(t->offset);
++        if (rt && rt != s_cur_rt && !rt->shown && rt->ghash != rt_mem_hash(rt)) {
++            free_rt(rt);                  /* overwritten: the texture now */
++            rt = NULL;
++            S.rt_stale++;
++        }
 +        if (rt) {
 +            /* Render-to-texture: sample the target itself. Its texels hold
 +             * A8R8G8B8 as drawn; a texture read in the reverse order swaps. */
++            if (rt != s_cur_rt)
++                rt_resolve(rt);
 +            srv[i] = rt->srv;
 +            key.kind[i] = 1;
 +            key.swap_rb[i] = (t->color == 0x3A || t->color == 0x3F);
@@ -2506,12 +2634,59 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +    return 1;
 +}
 +
++/* Widescreen: the title draws its 3D wider (its views are 16:9) and the
++ * picture is stretched to 16:9, so flat 2D -- HUD, menus, text, all with w
++ * exactly 1 -- would come out a third too wide. Those are drawn 3/4 as wide
++ * about the middle instead: right shape, inside the 4:3 area the title laid
++ * them out in. A full-width flat quad over a 3D scene is an effect on the
++ * whole picture and keeps its width. 3D clipped to a small box (a live
++ * portrait in the HUD) has the right shape already and only moves with the
++ * HUD around it. Sets x' = x * vx.z + vx.w (vx.z 0: as drawn). */
++static void overlay_fit(int flat, float x0, float x1)
++{
++    s_vcb_data[6] = s_vcb_data[7] = 0;
++    if (!s_cur_rt || !s_cur_rt->wide)
++        return;
++    if (!flat) {
++        s_world_cur = 1;
++        if (s_inset_dx != 0) {
++            s_vcb_data[6] = 1.0f;
++            s_vcb_data[7] = s_inset_dx;
++        }
++        return;
++    }
++    if (x0 <= 1.0f && x1 >= (float)s_cur_rt->w - 1.0f && s_world_prev)
++        return;
++    s_vcb_data[6] = 0.75f;
++    s_vcb_data[7] = (float)s_cur_rt->w * 0.5f * 0.25f;
++}
++
 +static void d3d_draw(const Nv2aGpuState *st, const Nv2aGpuVertex *v, uint32_t count)
 +{
++    float ok = 0, ox = 0;
 +    uint32_t done = 0;
 +
 +    if (!count || !setup_pixels(st))
 +        return;
++    if (s_dbg.log == 1) {
++        float x0 = 1e9f, x1 = -1e9f, w0 = 1e9f, w1 = -1e9f; uint32_t q;
++        for (q = 0; q < count; q++) {
++            float x = v[q].pos[0], w = v[q].pos[3];
++            if (x < x0) x0 = x; if (x > x1) x1 = x; if (w < w0) w0 = w; if (w > w1) w1 = w;
++        }
++        fprintf(stderr, "  [CPU] n %u x %.1f..%.1f w %.4f..%.4f\n", count, x0, x1, w0, w1);
++    }
++    if (s_cur_rt && s_cur_rt->wide) {
++        float x0 = 1e30f, x1 = -1e30f; uint32_t q; int flat = 1;
++        for (q = 0; q < count; q++) {
++            if (v[q].pos[3] != 1.0f) { flat = 0; break; }
++            if (v[q].pos[0] < x0) x0 = v[q].pos[0];
++            if (v[q].pos[0] > x1) x1 = v[q].pos[0];
++        }
++        overlay_fit(flat, x0, x1);
++        ok = s_vcb_data[6]; ox = s_vcb_data[7];
++        s_vcb_data[6] = s_vcb_data[7] = 0;        /* this path moves the vertices */
++    }
 +    if (K.il != s_layout) { ID3D11DeviceContext_IASetInputLayout(C, s_layout); K.il = s_layout; }
 +    if (!K.topo) { ID3D11DeviceContext_IASetPrimitiveTopology(C, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); K.topo = 1; }
 +    if (K.vs != s_vs) { ID3D11DeviceContext_VSSetShader(C, s_vs, NULL, 0); K.vs = s_vs; }
@@ -2528,6 +2703,12 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +        if (FAILED(ID3D11DeviceContext_Map(C, (ID3D11Resource *)s_vb, 0, how, 0, &m)))
 +            return;
 +        memcpy((Nv2aGpuVertex *)m.pData + s_vb_pos, v + done, (size_t)n * sizeof *v);
++        if (ok != 0) {
++            Nv2aGpuVertex *d = (Nv2aGpuVertex *)m.pData + s_vb_pos;
++            UINT q;
++            for (q = 0; q < n; q++)
++                d[q].pos[0] = d[q].pos[0] * ok + ox;
++        }
 +        ID3D11DeviceContext_Unmap(C, (ID3D11Resource *)s_vb, 0);
 +        ID3D11DeviceContext_IASetVertexBuffers(C, 0, 1, &s_vb, &stride, &off);
 +        ID3D11DeviceContext_Draw(C, n, s_vb_pos);
@@ -2698,6 +2879,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +         "  VO o;\n"
 +         "  float4 P = R12;\n"
 +         "  if (P.w == 0 && asuint(P.w) == 0) P.w = 1;\n"
++         "  if (vx.z != 0) P.x = P.x * vx.z + vx.w;\n"
 +         "  float wv = P.w;\n"
 +         "  o.p = float4((P.x * vp.x - 1.0) * wv, (1.0 - P.y * vp.y) * wv, P.z * vp.z * wv, wv);\n"
 +         "  o.d0 = saturate(O3); o.d1 = saturate(O4);\n"
@@ -2815,6 +2997,11 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +        return 0;
 +    if (!setup_pixels(st))
 +        return 1;                     /* nothing the CPU could do better */
++    if (s_dbg.log == 1) fprintf(stderr, "  [VSH] n %u nins %u probed %u x %.1f..%.1f y %.1f..%.1f w %.5f..%.5f"
++        " clip %u %u %u %u vp %.1f %.1f %.1f %.1f\n",
++        nidx, vs->nins, vs->probed, vs->box[0], vs->box[2], vs->box[1], vs->box[3], vs->wmin, vs->wmax,
++        st->clip_x, st->clip_y, st->clip_w, st->clip_h, vs->consts[58][0], vs->consts[58][1],
++        vs->consts[59][0], vs->consts[59][1]);
 +    /* Constants: re-uploaded only when they changed. */
 +    if (!s_kcb_valid || memcmp(s_kcb_data, vs->consts, sizeof s_kcb_data)) {
 +        memcpy(s_kcb_data, vs->consts, sizeof s_kcb_data);
@@ -2822,6 +3009,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +        s_kcb_valid = 1;
 +        S.const_uploads++;
 +    }
++    overlay_fit(vs->probed && vs->wmin == 1.0f && vs->wmax == 1.0f, vs->box[0], vs->box[2]);
 +    s_vcb_data[4] = vs->z_offset;
 +    s_vcb_data[5] = vs->near_z ? 1.0f : 0.0f;
 +    s_vcb_data[8] = vs->fog_enable ? 1.0f : 0.0f;
@@ -3089,10 +3277,15 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +        return 0;
 +    }
 +    cw = (float)s_swap_w; ch = (float)s_swap_h;
-+    if (cw * h <= ch * w) { dw = cw; dh = cw * h / w; }
-+    else { dh = ch; dw = ch * w / h; }
++    {
++        uint32_t aw, ah;
++        xbox_DisplayShape(w, h, &aw, &ah);
++        if (cw * ah <= ch * aw) { dw = cw; dh = cw * ah / aw; }
++        else { dh = ch; dw = ch * aw / ah; }
++    }
++    rt_resolve(rt);
 +    ID3D11DeviceContext_ClearRenderTargetView(C, s_swap_rtv, black);
-+    blit(s_swap_rtv, rt->srv, (float)(w * s_scale) / rt->pw, (float)(h * s_scale) / rt->ph,
++    blit(s_swap_rtv, rt->srv, (float)w / rt->w, (float)h / rt->h,
 +         (float)(int)((cw - dw) / 2), (float)(int)((ch - dh) / 2), (float)(int)dw, (float)(int)dh,
 +         s_blit_lin, NULL);
 +    overlay_update();
@@ -3114,17 +3307,16 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +    D3D11_MAPPED_SUBRESOURCE m;
 +    uint32_t sw = rt->w, sh = rt->h, y, x;
 +
-+    if (s_scale > 1) {
++    rt_resolve(rt);
++    if (rt->pw != rt->w || rt->ph != rt->h) {
 +        if (!s_small.t || s_small.w != rt->w || s_small.h != rt->h) {
-+            uint32_t keep = s_scale;
 +            if (s_small.t) free_rt(&s_small);
-+            s_scale = 1;                     /* allocate at 1x */
-+            make_rt(&s_small, rt->w, rt->h);
-+            s_scale = keep;
++            make_rt_ex(&s_small, rt->w, rt->h, 1);
 +        }
 +        if (!s_small.t || !blit_init())
 +            return;
-+        blit(s_small.rtv, rt->srv, 1.0f, 1.0f, 0, 0, (float)rt->w, (float)rt->h, s_blit_pt, NULL);
++        blit(s_small.rtv, rt->srv, 1.0f, 1.0f, 0, 0, (float)rt->w, (float)rt->h,
++             rt->pw > rt->w * 2 ? s_blit_lin : s_blit_pt, NULL);
 +        src = (ID3D11Resource *)s_small.t;
 +    }
 +    if (!s_stage[cur] || s_stage_w[cur] != sw || s_stage_h[cur] != sh) {
@@ -3182,8 +3374,11 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +    if (h > rt->h) h = rt->h;
 +    if (!w || !h)
 +        return;
++    rt->shown = 1;
 +    present_window(rt, w, h);
 +    guest_copy(rt, va, pitch, bpp, w, h);
++    s_world_prev = s_world_cur;
++    s_world_cur = 0;
 +}
 +
 +/* The F6 menu's choices, taken between frames. A new internal resolution
@@ -3194,9 +3389,20 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +    XboxGfxConfig *g = xbox_GfxConfig();
 +    static int reload_seen = -1;
 +    uint32_t want = g->scale < 1 ? 1u : (g->scale > 4 ? 4u : (uint32_t)g->scale);
++    uint32_t want_ms = g->msaa >= 8 ? 8u : g->msaa >= 4 ? 4u : g->msaa >= 2 ? 2u : 1u;
++    int want_wide = g->widescreen != 0;
 +    int i;
 +
-+    if (want != s_scale) {
++    /* The most samples up to the choice that both formats take. */
++    while (want_ms > 1) {
++        UINT qc = 0, qd = 0;
++        if (SUCCEEDED(ID3D11Device_CheckMultisampleQualityLevels(D, DXGI_FORMAT_B8G8R8A8_UNORM, want_ms, &qc))
++            && SUCCEEDED(ID3D11Device_CheckMultisampleQualityLevels(D, DXGI_FORMAT_D24_UNORM_S8_UINT, want_ms, &qd))
++            && qc && qd)
++            break;
++        want_ms >>= 1;
++    }
++    if (want != s_scale || want_ms != s_msaa || want_wide != s_wide) {
 +        for (i = 0; i < MAX_RT; i++)
 +            if (s_rt[i].t) free_rt(&s_rt[i]);
 +        for (i = 0; i < 16; i++)
@@ -3214,10 +3420,14 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +        ID3D11DeviceContext_OMSetRenderTargets(C, 0, NULL, NULL);
 +        s_cur_rt = NULL;
 +        s_scale = want;
-+        fprintf(stderr, "[GPU-D3D11] internal resolution %ux (%ux%u)\n", s_scale,
-+                640 * s_scale, 480 * s_scale);
++        s_msaa = want_ms;
++        s_wide = want_wide;
++        fprintf(stderr, "[GPU-D3D11] internal resolution %ux (%ux%u)%s, antialiasing %s%u\n",
++                s_scale, (s_wide ? 853 : 640) * s_scale, 480 * s_scale, s_wide ? " 16:9" : "",
++                s_msaa > 1 ? "MSAA " : "off", s_msaa > 1 ? s_msaa : 0);
 +    }
 +    g->scale_applied = (int)s_scale;
++    g->msaa_applied = (int)s_msaa;
 +    if (reload_seen != g->reload_seq) {
 +        reload_seen = g->reload_seq;
 +        tex_cache_clear();
@@ -3372,9 +3582,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_d3d11.c xboxrecomp-0.17.0.patched/sr
 +#else  /* !_WIN32 */
 +int nv2a_d3d11_init(void) { return 0; }
 +#endif
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.c xboxrecomp-0.17.0.patched/src/kernel/nv2a_flip_hold.c
---- xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.c	2026-11-10 14:39:39.985251755 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_flip_hold.c	2026-11-09 19:46:51.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.c src/kernel/nv2a_flip_hold.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.c	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/nv2a_flip_hold.c	2026-11-09 19:46:51.349423969 -0500
 @@ -56,6 +56,10 @@
      h->have_swap = 0;
      h->swap_immediate = 0;
@@ -3386,9 +3596,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.c xboxrecomp-0.17.0.patche
  
      if (!interval || !h->have_last || !clock_ok) {
          h->have_last = 1;
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.h xboxrecomp-0.17.0.patched/src/kernel/nv2a_flip_hold.h
---- xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.h	2026-11-10 14:39:39.985305371 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_flip_hold.h	2026-11-09 19:46:51.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.h src/kernel/nv2a_flip_hold.h
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.h	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/nv2a_flip_hold.h	2026-11-09 19:46:51.349178358 -0500
 @@ -45,6 +45,7 @@
  
  typedef struct {
@@ -3397,11 +3607,14 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_flip_hold.h xboxrecomp-0.17.0.patche
      /* The latest swap NOP since the previous FLIP_STALL. */
      int      have_swap;
      unsigned swap_interval;
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/src/kernel/nv2a_pb_exec.c
---- xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c	2026-11-10 14:39:40.149391564 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_pb_exec.c	2026-11-09 19:56:04.000000000 -0500
-@@ -44,7 +44,13 @@
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c src/kernel/nv2a_pb_exec.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/nv2a_pb_exec.c	2026-11-12 07:07:08.087951405 -0500
+@@ -42,9 +42,16 @@
+  * Morton order, not a second one that can disagree with it. */
+ #include "../d3d/d3d8_swizzle.h"
  #include "nv2a_vsh_interp.h"
++#include "video/gfx_config.h"
  #include "nv2a_combiner.h"
  #include "nv2a_backend.h"
 -#if defined(_WIN32)
@@ -3415,7 +3628,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
  #include <windows.h>
  #define NV_TLS __declspec(thread)
  #else
-@@ -504,6 +510,9 @@
+@@ -504,6 +511,9 @@
   * report sorts s_unhandled and rebuilds the slots afterwards. */
  static uint16_t s_unhandled_slot[0x2000 / 4];
  
@@ -3425,7 +3638,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
  static void note_unhandled(uint32_t method, uint32_t param)
  {
      uint16_t *slot = &s_unhandled_slot[(method & 0x1FFC) / 4];
-@@ -514,6 +523,23 @@
+@@ -514,6 +524,23 @@
          s_unhandled[*slot - 1].last_param = param;
          return;
      }
@@ -3449,7 +3662,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      if (s_unhandled_count < PB_EXEC_MAX_UNHANDLED) {
          s_unhandled[s_unhandled_count].method = method;
          s_unhandled[s_unhandled_count].count = 1;
-@@ -779,6 +805,10 @@
+@@ -779,6 +806,10 @@
  
  static const Nv2aBackend *s_backend;
  static void (*s_backend_present_sync)(void);
@@ -3460,7 +3673,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
  
  void nv2a_backend_register_with_present_sync(const Nv2aBackend *backend,
                                               void (*present_sync)(void))
-@@ -902,6 +932,30 @@
+@@ -902,6 +933,30 @@
      uint32_t bpp = surface_bpp();
      uint32_t y, x;
  
@@ -3491,7 +3704,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      /* A back end clears colour and/or depth/stencil itself (flags are the
       * CLEAR_SURFACE bits: Z 0x1, stencil 0x2, colour 0xF0). */
      if (s_backend && s_backend->clear) {
-@@ -1147,6 +1201,13 @@
+@@ -1147,6 +1202,13 @@
      case 0x06: return 0x12;                /* A8R8G8B8  -> LIN_A8R8G8B8  */
      case 0x07: return 0x1E;                /* X8R8G8B8  -> LIN_X8R8G8B8  */
      case 0x19: return 0x1F;                /* A8        -> LIN_A8        */
@@ -3505,7 +3718,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      default:   return fmt;                 /* already linear, or unhandled */
      }
  }
-@@ -1183,8 +1244,13 @@
+@@ -1183,8 +1245,13 @@
           * address, so a texture rewritten in place (a render target reused,
           * a streamed mip) never returns stale texels.
           * ponytail: single-threaded executor, so a plain static table. */
@@ -3521,7 +3734,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
          uint32_t bb = d3d8_format_dxt_block_bytes(fmt);
          uint32_t bx = u >> 2, by = v >> 2, bw = (t->width + 3) >> 2;
          const uint8_t *blk = mem + base + ((size_t)by * bw + bx) * bb;
-@@ -1359,7 +1425,7 @@
+@@ -1359,7 +1426,7 @@
   */
  static void dump_texture_bmp(uint32_t seq)
  {
@@ -3530,7 +3743,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      uint32_t w = s_gpu.texs[0].width, h = s_gpu.texs[0].height, x, y;
      uint32_t row_bytes, pad, filesz;
      uint8_t hdr[54];
-@@ -2220,6 +2286,155 @@
+@@ -2220,6 +2287,155 @@
      note_drawn();
  }
  
@@ -3686,7 +3899,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
  /* One triangle by vertex index: gather position and, if the batch has one,
   * texture coordinate 0. A vertex whose position cannot be read is not drawn;
   * a batch whose texcoords cannot be read is drawn untextured rather than not
-@@ -2243,6 +2458,33 @@
+@@ -2243,6 +2459,33 @@
              && fetch_texcoord(i1, uv[1])
              && fetch_texcoord(i2, uv[2]);
  
@@ -3720,7 +3933,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      if (backend_draws()) {                 /* a back end rasterises */
          Nv2aVertex *o = backend_slot();
          const uint32_t ix[3] = { i0, i1, i2 };
-@@ -2730,7 +2972,7 @@
+@@ -2730,7 +2973,7 @@
                              continue;
                      }
                  }
@@ -3729,7 +3942,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
                      *zp = z;
                  if (s_gpu.zpass_enable)
                      cnt->zpass++;
-@@ -3068,6 +3310,16 @@
+@@ -3068,6 +3311,16 @@
          s_gpu.xf_degenerate++;
          return;
      }
@@ -3746,7 +3959,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      if (backend_draws()) {                     /* a back end rasterises */
          Nv2aVertex *o = backend_slot();
          if (o) {
-@@ -3321,15 +3573,192 @@
+@@ -3321,15 +3574,217 @@
      s_xf_o[2] = of[2];
  }
  
@@ -3888,6 +4101,31 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
 +    vs.fog_mode = s_gpu.fog_mode;
 +    vs.fog_param[0] = s_gpu.fog_param[0];
 +    vs.fog_param[1] = s_gpu.fog_param[1];
++    if (xbox_GfxConfig()->widescreen) {
++        /* Where the vertices land: run on the CPU, first vertex only unless
++         * its w is 1 (flat 2D: overlays, text -- few vertices). A back end
++         * uses it to tell a 2D overlay from 3D. */
++        float in[NV2A_VSH_INPUTS][4];
++        Nv2aVshOutput o;
++        uint32_t a, lim = nv < 4096 ? nv : 4096;
++        vs.box[0] = vs.box[1] = 1e30f; vs.box[2] = vs.box[3] = -1e30f;
++        vs.wmin = 1e30f; vs.wmax = -1e30f;
++        memset(in, 0, sizeof in);
++        for (i = 0; i < lim; i++) {
++            for (a = 0; a < nattr; a++)
++                memcpy(in[attrs[a]], vin + (size_t)i * stride + a * 4, 4 * sizeof(float));
++            if (!nv2a_vsh_run((const float (*)[4])in, &o))
++                break;
++            if (o.pos[0] < vs.box[0]) vs.box[0] = o.pos[0];
++            if (o.pos[1] < vs.box[1]) vs.box[1] = o.pos[1];
++            if (o.pos[0] > vs.box[2]) vs.box[2] = o.pos[0];
++            if (o.pos[1] > vs.box[3]) vs.box[3] = o.pos[1];
++            if (o.pos[3] < vs.wmin) vs.wmin = o.pos[3];
++            if (o.pos[3] > vs.wmax) vs.wmax = o.pos[3];
++            if (o.pos[3] != 1.0f) { i = lim; break; }   /* 3D: enough known */
++        }
++        vs.probed = i == lim && (nv <= lim || vs.wmax != 1.0f);
++    }
 +    if (!s_gpub->draw_vsh(&st, &vs, vin, nv, vidx, ni))
 +        return 0;
 +    s_gpu.batches_program++;
@@ -3942,7 +4180,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      xf_set_viewport();
      {
          const VertexAttr *tc = texcoord_attr();
-@@ -3463,6 +3892,8 @@
+@@ -3463,6 +3918,8 @@
      }
      /* The batch's triangles, all at once (see xf_queue_push). */
      xf_queue_flush();
@@ -3951,7 +4189,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      if (backend_draws())
          backend_flush(!s_xf_no_tex);
  }
-@@ -3546,6 +3977,8 @@
+@@ -3546,6 +4003,8 @@
      default:
          break;                             /* points and lines: not yet */
      }
@@ -3960,7 +4198,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      if (backend_draws())
          backend_flush(textured);
  
-@@ -3615,7 +4048,7 @@
+@@ -3615,7 +4074,7 @@
      if (!s_gpu.prim || !s_gpu.idx_count)
          return;
      s_gpu.draws++;
@@ -3969,7 +4207,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
          fprintf(stderr, "  [GPU] draw #%u\n", s_gpu.draws);
      s_gpu.verts += s_gpu.idx_count;
  
-@@ -4074,6 +4507,7 @@
+@@ -4074,6 +4533,7 @@
  
  void nv2a_pb_exec_walk_begin(void)
  {
@@ -3977,7 +4215,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      s_walk_vbl = xbox_VblankCount();
  }
  
-@@ -4118,6 +4552,9 @@
+@@ -4118,6 +4578,9 @@
  }
  
  /* Once per pass of the ack loop: 1 while a flip is held. */
@@ -3987,7 +4225,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
  int nv2a_pb_exec_flip_poll(void)
  {
      uint64_t now;
-@@ -4173,8 +4610,41 @@
+@@ -4173,8 +4636,41 @@
      return 1;
  }
  
@@ -4029,7 +4267,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
      /* BACK_END_WRITE_SEMAPHORE_RELEASE. The title's pointer already names the
       * semaphore word; SET_SEMAPHORE_OFFSET is not added (in X-Men Legends it
       * held 0xFF000000 at times, which put the write outside guest memory). */
-@@ -4266,7 +4736,7 @@
+@@ -4266,7 +4762,7 @@
       * enter it. So for a mirrored fence the latch carries the mirror's fence
       * bits and the marker's address, which is what a GPU that had consumed
       * everything would report. */
@@ -4038,7 +4276,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
          volatile uint32_t *r = xbox_Nv2aRegPtr(0x400B10);
  
          if (!r)
-@@ -4387,7 +4857,9 @@
+@@ -4387,7 +4883,9 @@
                      param, s_gpu.color_offset, s_gpu.clip_w, s_gpu.clip_h,
                      s_gpu.clear_color, 10);
          clear_surface(param);
@@ -4049,7 +4287,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
              zbuf_clear();
          break;
  
-@@ -4456,6 +4928,10 @@
+@@ -4456,6 +4954,10 @@
          /* Non-zero, it is one of D3D's software methods, which the GPU traps
           * to D3D's interrupt handler on the console. Only the swap's interval
           * matters here (nv2a_flip_hold.h); the rest stays a no-op. */
@@ -4060,7 +4298,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
          if (!nv2a_pb_exec_flip_pacing()) {
              if (!imm_vertex_method(method, param))
                  note_unhandled(method, param);   /* as before the hold */
-@@ -4511,6 +4987,20 @@
+@@ -4511,6 +5013,20 @@
          xbox_Nv2aFrameCounterFlip();
          if (s_backend_present_sync)
              s_backend_present_sync();
@@ -4081,7 +4319,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
          /* Hand the window a copy of the frame just finished.
           *
           * The buffer the title has finished is the one the last batch drew
-@@ -4580,6 +5070,11 @@
+@@ -4580,6 +5096,11 @@
           * early. */
          if (nv2a_pb_exec_flip_pacing()) {
              extern int nv2a_pb_scan_in_call(void);
@@ -4093,7 +4331,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
              xbox_FlipHoldStall(&s_flip_hold, stall_vbl, stall_ns,
                                 clock_ok && !nv2a_pb_scan_in_call());
          }
-@@ -4840,7 +5335,8 @@
+@@ -4840,7 +5361,8 @@
              cur = off;
              fprintf(stderr, "  [CHAIN] start 0x%08X\n", cur);
          } else {
@@ -4103,7 +4341,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
                  fprintf(stderr, "  [CHAIN] step %d: 0x%08X is not a guest"
                                  " pointer -- chain ends\n", step, cur);
                  return;
-@@ -4851,7 +5347,8 @@
+@@ -4851,7 +5373,8 @@
          }
          step++;
      }
@@ -4113,7 +4351,7 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
          fprintf(stderr, "  [CHAIN] final value at 0x%08X = 0x%08X\n",
                  cur, *(const uint32_t *)(mem + cur));
      fflush(stderr);
-@@ -4882,6 +5379,21 @@
+@@ -4882,6 +5405,21 @@
              fprintf(stderr, "[GPU] %.2f fps (%u flips)%c",
                      (s_gpu.flips - last_flips) * 1000.0 / (now - last_ms),
                      s_gpu.flips, 10);
@@ -4135,9 +4373,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_exec.c xboxrecomp-0.17.0.patched/
          last_flips = s_gpu.flips;
          last_ms = now;
      }
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_scan.c xboxrecomp-0.17.0.patched/src/kernel/nv2a_pb_scan.c
---- xboxrecomp-0.17.0/src/kernel/nv2a_pb_scan.c	2026-11-10 14:39:40.153391565 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_pb_scan.c	2026-11-09 15:56:10.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_pb_scan.c src/kernel/nv2a_pb_scan.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_pb_scan.c	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/nv2a_pb_scan.c	2026-11-09 15:56:10.071006324 -0500
 @@ -164,6 +164,7 @@
      return "";
  }
@@ -4467,9 +4705,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_pb_scan.c xboxrecomp-0.17.0.patched/
      words = pb_walk_segment(start_va, end_va, 0, &jumps, &unknown);
  
      s_tot_words += words;
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.c xboxrecomp-0.17.0.patched/src/kernel/nv2a_vsh_interp.c
---- xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.c	2026-11-10 14:39:40.154011165 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_vsh_interp.c	2026-11-09 13:24:25.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.c src/kernel/nv2a_vsh_interp.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.c	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/nv2a_vsh_interp.c	2026-11-09 13:24:25.987088913 -0500
 @@ -707,3 +707,23 @@
      }
      return 0;
@@ -4494,9 +4732,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.c xboxrecomp-0.17.0.patch
 +const float (*nv2a_vsh_constant_table(void))[4] { return (const float (*)[4])s_const; }
 +
 +int nv2a_vsh_cxt_write_enabled(void) { return s_cxt_write != 0; }
-diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.h xboxrecomp-0.17.0.patched/src/kernel/nv2a_vsh_interp.h
---- xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.h	2026-11-10 14:39:40.154147186 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/nv2a_vsh_interp.h	2026-11-09 13:24:26.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.h src/kernel/nv2a_vsh_interp.h
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.h	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/nv2a_vsh_interp.h	2026-11-09 13:24:26.021890157 -0500
 @@ -58,4 +58,12 @@
  void nv2a_vsh_constant_component(uint32_t index, uint32_t comp, uint32_t word);
  void nv2a_vsh_set_instruction(uint32_t slot, const uint32_t words[4]);
@@ -4510,9 +4748,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/nv2a_vsh_interp.h xboxrecomp-0.17.0.patch
 +int nv2a_vsh_cxt_write_enabled(void);
 +
  #endif
-diff -ruN xboxrecomp-0.17.0/src/kernel/xbox_memory_layout.c xboxrecomp-0.17.0.patched/src/kernel/xbox_memory_layout.c
---- xboxrecomp-0.17.0/src/kernel/xbox_memory_layout.c	2026-11-10 14:39:40.155213433 -0500
-+++ xboxrecomp-0.17.0.patched/src/kernel/xbox_memory_layout.c	2026-11-09 19:48:39.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/kernel/xbox_memory_layout.c src/kernel/xbox_memory_layout.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/kernel/xbox_memory_layout.c	2026-11-06 02:27:36.000000000 -0500
++++ src/kernel/xbox_memory_layout.c	2026-11-09 19:48:39.230567963 -0500
 @@ -1449,10 +1449,206 @@
      return (volatile uint32_t *)((char *)g_nv2a_memory + offset);
  }
@@ -4848,9 +5086,9 @@ diff -ruN xboxrecomp-0.17.0/src/kernel/xbox_memory_layout.c xboxrecomp-0.17.0.pa
          } else {
              fprintf(stderr, "  WARNING: kernel thunk VA 0x%08X out of range (raw=0x%08X)\n",
                      thunk_va, thunk_raw);
-diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src/video/fb_present.c
---- xboxrecomp-0.17.0/src/video/fb_present.c	2026-11-10 14:39:40.159905645 -0500
-+++ xboxrecomp-0.17.0.patched/src/video/fb_present.c	2026-11-11 08:08:48.000000000 -0500
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/video/fb_present.c src/video/fb_present.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/video/fb_present.c	2026-11-06 02:27:36.000000000 -0500
++++ src/video/fb_present.c	2026-11-12 06:52:40.392228509 -0500
 @@ -39,6 +39,7 @@
   * them. */
  #include "keyboard.h"   /* src/input */
@@ -4899,7 +5137,7 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
      ReleaseSRWLockExclusive(&s_present_lock);
  }
  
-@@ -219,6 +226,552 @@
+@@ -219,6 +226,590 @@
      return copied;
  }
  
@@ -4924,6 +5162,10 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
 +        s_gfx.tex_dump = env_int("RECOMP_TEX_DUMP", 0, 0, 1);
 +        s_gfx.tex_replace = env_int("RECOMP_TEX_REPLACE", 0, 0, 1);
 +        s_gfx.fps60 = env_int("RECOMP_FPS60", 0, 0, 1);
++        s_gfx.widescreen = env_int("RECOMP_WIDESCREEN", 0, 0, 1);
++        s_gfx.msaa = env_int("RECOMP_MSAA", 1, 1, 8);
++        if (s_gfx.msaa != 2 && s_gfx.msaa != 4 && s_gfx.msaa != 8)
++            s_gfx.msaa = 1;
 +        s_gfx.direct_move = env_int("SIMS_DIRECT_MOVE", 0, 0, 1);
 +        s_gfx.cam_dist = env_int("SIMS_CAM_DIST", 55, 15, 200);
 +        s_gfx.cam_angle = env_int("SIMS_CAM_ANGLE", 35, 5, 80);
@@ -4931,6 +5173,15 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
 +        s_gfx.cam_follow = env_int("SIMS_CAM_FOLLOW", 2, 0, 3);
 +    }
 +    return &s_gfx;
++}
++
++void xbox_DisplayShape(uint32_t w, uint32_t h, uint32_t *aw, uint32_t *ah)
++{
++    if (xbox_GfxConfig()->widescreen && w && h) {
++        *aw = h * 16; *ah = h * 9;          /* any frame size: shown 16:9 */
++    } else {
++        *aw = w; *ah = h;
++    }
 +}
 +
 +/* Rewrite (or add) NAME=value in settings.ini beside the exe, keeping every
@@ -5028,7 +5279,7 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
 +}
 +
 +/* The menu. */
-+enum { MENU_SCALE, MENU_FPS60, MENU_DM, MENU_CAMDIST, MENU_CAMANGLE, MENU_CAMAIM, MENU_CAMFOLLOW, MENU_FPS,
++enum { MENU_SCALE, MENU_WIDE, MENU_AA, MENU_FPS60, MENU_DM, MENU_CAMDIST, MENU_CAMANGLE, MENU_CAMAIM, MENU_CAMFOLLOW, MENU_FPS,
 +       MENU_DUMP, MENU_REPLACE, MENU_RELOAD, MENU_CLOSE, MENU_N };
 +static int s_menu_open, s_menu_sel;
 +static double s_fps_now;
@@ -5041,6 +5292,18 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
 +        g->scale = ((g->scale - 1 + dir + 4) % 4) + 1;
 +        settings_save("RECOMP_GPU_SCALE", g->scale);
 +        break;
++    case MENU_WIDE:
++        g->widescreen = !g->widescreen;
++        settings_save("RECOMP_WIDESCREEN", g->widescreen);
++        break;
++    case MENU_AA: {
++        static const int steps[4] = { 1, 2, 4, 8 };
++        int k = 0;
++        while (k < 3 && steps[k] != g->msaa) k++;
++        g->msaa = steps[(k + dir + 4) % 4];
++        settings_save("RECOMP_MSAA", g->msaa);
++        break;
++    }
 +    case MENU_FPS60:
 +        g->fps60 = !g->fps60;
 +        settings_save("RECOMP_FPS60", g->fps60);
@@ -5236,7 +5499,7 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
 +    }
 +    if (s_menu_open) {
 +        static const char *names[MENU_N] = {
-+            "Internal resolution", "Frame rate", "Left stick", "  Camera distance", "  Camera angle",
++            "Internal resolution", "Widescreen", "Antialiasing", "Frame rate", "Left stick", "  Camera distance", "  Camera angle",
 +            "  Camera aim height", "  Camera follows her", "Show FPS", "Dump textures", "Replace textures",
 +            "Reload replacement textures", "Close menu"
 +        };
@@ -5266,7 +5529,16 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
 +            switch (i) {
 +            case MENU_SCALE:
 +                if (!g->gpu_active) snprintf(t, sizeof t, "1x (software renderer)");
-+                else snprintf(t, sizeof t, "< %dx  %dx%d >", g->scale, 640 * g->scale, 480 * g->scale);
++                else snprintf(t, sizeof t, "< %dx  %dx%d >", g->scale,
++                              (g->widescreen ? 853 : 640) * g->scale, 480 * g->scale);
++                break;
++            case MENU_WIDE:    snprintf(t, sizeof t, "%s", g->widescreen ? "16:9" : "Off (4:3)"); break;
++            case MENU_AA:
++                if (!g->gpu_active) snprintf(t, sizeof t, "Off (software renderer)");
++                else if (g->msaa <= 1) snprintf(t, sizeof t, "< Off >");
++                else if (g->msaa_applied && g->msaa_applied != g->msaa)
++                    snprintf(t, sizeof t, "< %dx MSAA (%dx here) >", g->msaa, g->msaa_applied);
++                else snprintf(t, sizeof t, "< %dx MSAA >", g->msaa);
 +                break;
 +            case MENU_FPS60:   snprintf(t, sizeof t, "%s", g->fps60 ? "60 (experimental)" : "30 (original)"); break;
 +            case MENU_DM:      snprintf(t, sizeof t, "%s", g->direct_move ? "Moves your Sim" : "Moves the cursor"); break;
@@ -5330,10 +5602,14 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
 +        mw = cw; mh = ch;
 +    }
 +    FillRect(mdc, &c, (HBRUSH)GetStockObject(BLACK_BRUSH));
-+    if ((long long)cw * h <= (long long)ch * w) {
-+        dw = cw; dh = (LONG)((long long)cw * h / w);
-+    } else {
-+        dh = ch; dw = (LONG)((long long)ch * w / h);
++    {
++        uint32_t aw, ah;
++        xbox_DisplayShape(w, h, &aw, &ah);
++        if ((long long)cw * ah <= (long long)ch * aw) {
++            dw = cw; dh = (LONG)((long long)cw * ah / aw);
++        } else {
++            dh = ch; dw = (LONG)((long long)ch * aw / ah);
++        }
 +    }
 +    memset(&bi, 0, sizeof bi);
 +    bi.bmiHeader.biSize = sizeof bi.bmiHeader;
@@ -5452,7 +5728,7 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
  /* Title bar, the way ps3recomp's window shows it. Written by the flip,
   * read once a second by the window thread; a torn read shows one stale
   * number for a second, which nobody can tell apart from a real one. */
-@@ -280,6 +833,9 @@
+@@ -280,6 +871,9 @@
      }
      if (m == WM_SYSKEYDOWN && w == VK_RETURN)
          return 0;                       /* auto-repeat of Alt+Enter */
@@ -5462,7 +5738,31 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
      switch (m) {
      case WM_CLOSE:
      case WM_DESTROY:
-@@ -485,9 +1041,19 @@
+@@ -469,10 +1063,19 @@
+         FillRect(hdc, &c, (HBRUSH)GetStockObject(BLACK_BRUSH));
+         lw = cw; lh = ch;
+     }
+-    if ((long long)cw * s_fb_height <= (long long)ch * s_fb_width) {
+-        w = cw; h = (LONG)((long long)cw * s_fb_height / s_fb_width);
+-    } else {
+-        h = ch; w = (LONG)((long long)ch * s_fb_width / s_fb_height);
++    {
++        uint32_t aw, ah;
++        static int lwide = -1;
++        xbox_DisplayShape(s_fb_width, s_fb_height, &aw, &ah);
++        if (lwide != xbox_GfxConfig()->widescreen) {   /* new borders */
++            lwide = xbox_GfxConfig()->widescreen;
++            FillRect(hdc, &c, (HBRUSH)GetStockObject(BLACK_BRUSH));
++        }
++        if ((long long)cw * ah <= (long long)ch * aw) {
++            w = cw; h = (LONG)((long long)cw * ah / aw);
++        } else {
++            h = ch; w = (LONG)((long long)ch * aw / ah);
++        }
+     }
+     SetStretchBltMode(hdc, HALFTONE);
+     SetBrushOrgEx(hdc, 0, 0, NULL);     /* HALFTONE wants it after the mode */
+@@ -485,9 +1088,19 @@
   * for vsync, so returns 1 when the loop is already paced), else GDI. */
  static int fb_show(HWND hwnd, HDC hdc, const BITMAPINFO *bi)
  {
@@ -5483,7 +5783,19 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
      return 0;
  }
  
-@@ -537,6 +1103,7 @@
+@@ -524,7 +1137,10 @@
+         }
+         for (;; scale--) {
+             r.left = 0; r.top = 0;
+-            r.right = (LONG)s_fb_width * scale; r.bottom = (LONG)s_fb_height * scale;
++            uint32_t aw, ah;
++            xbox_DisplayShape(s_fb_width, s_fb_height, &aw, &ah);
++            r.right = (LONG)((uint64_t)s_fb_height * aw / ah) * scale;
++            r.bottom = (LONG)s_fb_height * scale;
+             AdjustWindowRect(&r, WS_OVERLAPPEDWINDOW, FALSE);
+             if (scale <= 1 || (r.right - r.left <= work.right - work.left
+                                && r.bottom - r.top <= work.bottom - work.top))
+@@ -537,6 +1153,7 @@
                                 r.right - r.left, r.bottom - r.top,
                                 NULL, NULL, GetModuleHandleA(NULL), NULL);
      }
@@ -5491,7 +5803,7 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
      if (!hwnd) {
          InterlockedExchange(&s_fb_running, 0);
          return 0;
-@@ -572,7 +1139,34 @@
+@@ -572,7 +1189,34 @@
              TranslateMessage(&msg);
              DispatchMessageA(&msg);
          }
@@ -5527,7 +5839,7 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
              /* A finished frame, published by the flip. Copied into s_rgb so
               * the dump path and GDI see one consistent image even if the
               * next flip lands mid-blit. */
-@@ -619,9 +1213,9 @@
+@@ -619,9 +1263,9 @@
              if (now - t0 >= 1000) {
                  LONG f = s_flips;
                  wchar_t tb[128];
@@ -5540,10 +5852,10 @@ diff -ruN xboxrecomp-0.17.0/src/video/fb_present.c xboxrecomp-0.17.0.patched/src
                  tb[127] = 0;
                  SetWindowTextW(hwnd, tb);
                  t0 = now; f0 = f;
-diff -ruN xboxrecomp-0.17.0/src/video/gfx_config.h xboxrecomp-0.17.0.patched/src/video/gfx_config.h
---- xboxrecomp-0.17.0/src/video/gfx_config.h	1969-12-31 19:00:00.000000000 -0500
-+++ xboxrecomp-0.17.0.patched/src/video/gfx_config.h	2026-11-11 08:08:48.000000000 -0500
-@@ -0,0 +1,64 @@
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/video/gfx_config.h src/video/gfx_config.h
+--- /tmp/orig/xboxrecomp-0.17.0/src/video/gfx_config.h	1969-12-31 19:00:00.000000000 -0500
++++ src/video/gfx_config.h	2026-11-12 06:44:40.156058276 -0500
+@@ -0,0 +1,79 @@
 +/*
 + * Graphics settings shared by the framebuffer window (which owns the F6 menu)
 + * and the GPU back end (which applies them). The window writes the user's
@@ -5556,6 +5868,13 @@ diff -ruN xboxrecomp-0.17.0/src/video/gfx_config.h xboxrecomp-0.17.0.patched/src
 + *   RECOMP_SHOW_FPS     0/1  frame-rate counter in the window
 + *   RECOMP_TEX_DUMP     0/1  save each texture once to textures\dump\*.png
 + *   RECOMP_TEX_REPLACE  0/1  use textures\replace\<same name>.png instead
++ *   RECOMP_WIDESCREEN   0/1  16:9: the picture is shown 16:9 and flat 2D
++ *                            overlays keep their shape; the title's own code
++ *                            makes it draw the wider view (for The Sims
++ *                            Bustin' Out, its display object's widescreen
++ *                            flag: reporting a widescreen TV at boot instead
++ *                            stalls its D3D set-up)
++ *   RECOMP_MSAA         1/2/4/8  multisample antialiasing (GPU renderer)
 + */
 +#ifndef XBOXRECOMP_GFX_CONFIG_H
 +#define XBOXRECOMP_GFX_CONFIG_H
@@ -5569,7 +5888,9 @@ diff -ruN xboxrecomp-0.17.0/src/video/gfx_config.h xboxrecomp-0.17.0.patched/src
 +    volatile int tex_dump;
 +    volatile int tex_replace;
 +    volatile int reload_seq;         /* bumped: re-read textures\replace */
-+    volatile int fps60;              /* experimental: 120 Hz vblank (RECOMP_FPS60) */
++    volatile int fps60;
++    volatile int widescreen;         /* 16:9 (RECOMP_WIDESCREEN) */
++    volatile int msaa;               /* samples per pixel: 1, 2, 4, 8 (RECOMP_MSAA) */              /* experimental: 120 Hz vblank (RECOMP_FPS60) */
 +    volatile int direct_move;        /* title option: left stick moves the character (SIMS_DIRECT_MOVE) */
 +    volatile int cam_dist;           /* title option: follow camera distance, tenths of a tile (SIMS_CAM_DIST) */
 +    volatile int cam_angle;          /* ... looking down, degrees (SIMS_CAM_ANGLE) */
@@ -5578,11 +5899,17 @@ diff -ruN xboxrecomp-0.17.0/src/video/gfx_config.h xboxrecomp-0.17.0.patched/src
 +    /* reported by the back end */
 +    volatile int gpu_active;         /* 0: software renderer (no scaling) */
 +    volatile int scale_applied;
++    volatile int msaa_applied;       /* what the GPU supports of msaa */
 +    volatile int dumped, replaced, replacements_found;
 +    char adapter[128];
 +} XboxGfxConfig;
 +
 +XboxGfxConfig *xbox_GfxConfig(void);
++
++/* The shape to show a w x h frame in: 16:9 when widescreen is on (the title
++ * drew it squeezed into its 4:3 frame, as for a widescreen TV), else w:h.
++ * Fills *aw, *ah with a width and height of that shape. */
++void xbox_DisplayShape(uint32_t w, uint32_t h, uint32_t *aw, uint32_t *ah);
 +
 +/* A frame rendered above 640x480: the window shows it instead of the guest
 + * framebuffer copy that follows (unless the video overlay is in use). */
@@ -5608,3 +5935,33 @@ diff -ruN xboxrecomp-0.17.0/src/video/gfx_config.h xboxrecomp-0.17.0.patched/src
 +void xbox_PickListHide(void);
 +
 +#endif
+diff -ruN -x '*.o' /tmp/orig/xboxrecomp-0.17.0/src/video/gpu_present.c src/video/gpu_present.c
+--- /tmp/orig/xboxrecomp-0.17.0/src/video/gpu_present.c	2026-11-06 02:27:36.000000000 -0500
++++ src/video/gpu_present.c	2026-11-12 06:28:24.983693828 -0500
+@@ -25,6 +25,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include "gpu_present.h"
++#include "gfx_config.h"
+ 
+ static ID3D11Device             *s_dev;
+ static ID3D11DeviceContext      *s_ctx;
+@@ -195,10 +196,14 @@
+     ID3D11DeviceContext_OMSetRenderTargets(s_ctx, 1, &s_rtv, NULL);
+     ID3D11DeviceContext_ClearRenderTargetView(s_ctx, s_rtv, black);
+     /* The largest rectangle of the frame's shape that fits, centred. */
+-    sx = (float)s_bw / (float)s_w;
+-    sy = (float)s_bh / (float)s_h;
+-    vp.Width = (float)s_w * (sx < sy ? sx : sy);
+-    vp.Height = (float)s_h * (sx < sy ? sx : sy);
++    {
++        uint32_t aw, ah;
++        xbox_DisplayShape(s_w, s_h, &aw, &ah);
++        sx = (float)s_bw / (float)aw;
++        sy = (float)s_bh / (float)ah;
++        vp.Width = (float)aw * (sx < sy ? sx : sy);
++        vp.Height = (float)ah * (sx < sy ? sx : sy);
++    }
+     vp.TopLeftX = ((float)s_bw - vp.Width) * 0.5f;
+     vp.TopLeftY = ((float)s_bh - vp.Height) * 0.5f;
+     vp.MinDepth = 0; vp.MaxDepth = 1;
