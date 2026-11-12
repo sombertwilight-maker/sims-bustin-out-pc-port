@@ -71,7 +71,20 @@ void xbox_InputInit(void)
     }
 }
 
+/* A title may change what the game sees (xbox_input_filter, input_map.h):
+ * the raw state is built below, then handed to it. */
+void (*xbox_input_filter)(DWORD port, XBOX_INPUT_STATE *state);
+static DWORD input_get_state_raw(DWORD dwPort, XBOX_INPUT_STATE *pState);
+
 DWORD xbox_InputGetState(DWORD dwPort, XBOX_INPUT_STATE *pState)
+{
+    DWORD r = input_get_state_raw(dwPort, pState);
+    if (r == ERROR_SUCCESS && xbox_input_filter)
+        xbox_input_filter(dwPort, pState);
+    return r;
+}
+
+static DWORD input_get_state_raw(DWORD dwPort, XBOX_INPUT_STATE *pState)
 {
     XINPUT_STATE xi_state;
     DWORD result;

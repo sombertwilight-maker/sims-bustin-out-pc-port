@@ -11666,3 +11666,112 @@ void xbox_kernel_bridge_init(void)
             KERNEL_VA_BASE, KERNEL_VA_BASE + (resolved - 1) * 4);
 
 }
+
+/* ── Memory watch (debugging) ─────────────────────────────────
+ * RECOMP_MEMWATCH=1: memwatch.txt beside the exe is re-read when it changes.
+ *   w ADDR LEN   log every write to guest ADDR..ADDR+LEN-1
+ *   r ADDR LEN   log every read or write
+ *   (empty)      off
+ * The page is protected; the fault names the exe function that touched it
+ * (host RIP, an offset nm resolves) and the guest call chain, then the
+ * access is single-stepped and the page protected again. At most 400 lines
+ * per arming. Watching a page others use heavily slows the game. */
+static volatile uint32_t s_mw_lo, s_mw_hi, s_mw_rd, s_mw_hits;
+static uintptr_t s_mw_page;
+static RECOMP_TLS int s_mw_step;
+
+static void mw_protect(int on)
+{
+    DWORD old;
+    if (s_mw_page)
+        VirtualProtect((void *)s_mw_page, 4096, on ? (s_mw_rd ? PAGE_NOACCESS : PAGE_READONLY)
+                                                   : PAGE_READWRITE, &old);
+}
+
+static LONG CALLBACK mw_handler(PEXCEPTION_POINTERS ep)
+{
+    PEXCEPTION_RECORD er = ep->ExceptionRecord;
+    if (er->ExceptionCode == EXCEPTION_SINGLE_STEP && s_mw_step) {
+        s_mw_step = 0;
+        mw_protect(1);
+        return EXCEPTION_CONTINUE_EXECUTION;
+    }
+    if (er->ExceptionCode == EXCEPTION_ACCESS_VIOLATION && s_mw_page && er->NumberParameters >= 2) {
+        uintptr_t a = (uintptr_t)er->ExceptionInformation[1];
+        int wr = er->ExceptionInformation[0] == 1;
+        if (a < s_mw_page || a >= s_mw_page + 4096)
+            return EXCEPTION_CONTINUE_SEARCH;
+        {
+            uint32_t ga = (uint32_t)(a - (uintptr_t)xbox_GetMemoryOffset());
+            /* Each code address once per arming: a per-frame reader would
+             * otherwise fill the log before the access being looked for. */
+            static uintptr_t seen[512];
+            static volatile LONG nseen;
+            uintptr_t rip = (uintptr_t)ep->ContextRecord->Rip;
+            LONG q, isnew = 1;
+            for (q = 0; q < nseen && q < 512; q++) if (seen[q] == rip) { isnew = 0; break; }
+            if (s_mw_hits == 0 && nseen) { nseen = 0; isnew = 1; }
+            if (isnew && nseen < 512) seen[InterlockedIncrement(&nseen) - 1] = rip;
+            if (ga >= s_mw_lo && ga < s_mw_hi && (wr || s_mw_rd) && isnew && s_mw_hits < 400) {
+                uintptr_t lo = (uintptr_t)GetModuleHandleA(NULL);
+                uint32_t k, shown = 0;
+                s_mw_hits++;
+                fprintf(stderr, "[MWATCH] %s %08X tid %lu exe+%06llX esp %08X chain:", wr ? "W" : "R", ga,
+                        (unsigned long)GetCurrentThreadId(),
+                        (unsigned long long)((uintptr_t)ep->ContextRecord->Rip - lo), g_esp);
+                for (k = 0; g_esp && k < 512 && shown < 14; k++) {
+                    uint32_t v = BRIDGE_MEM32(g_esp + k * 4);
+                    if (v >= 0x00011000u && v < 0x002E1C00u) { fprintf(stderr, " %08X", v); shown++; }
+                }
+                fprintf(stderr, "\n");
+                fflush(stderr);
+            }
+        }
+        mw_protect(0);
+        s_mw_step = 1;
+        ep->ContextRecord->EFlags |= 0x100;            /* trap after this access */
+        return EXCEPTION_CONTINUE_EXECUTION;
+    }
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
+static DWORD WINAPI mw_thread(LPVOID unused)
+{
+    FILETIME last = { 0, 0 };
+    (void)unused;
+    AddVectoredExceptionHandler(1, mw_handler);
+    for (;;) {
+        WIN32_FILE_ATTRIBUTE_DATA fa;
+        Sleep(500);
+        if (!GetFileAttributesExA("memwatch.txt", GetFileExInfoStandard, &fa)
+            || !memcmp(&fa.ftLastWriteTime, &last, sizeof last))
+            continue;
+        last = fa.ftLastWriteTime;
+        {
+            FILE *f = fopen("memwatch.txt", "r");
+            char k = 0;
+            unsigned a = 0, n = 0;
+            if (!f) continue;
+            if (fscanf(f, " %c %x %x", &k, &a, &n) != 3) k = 0;
+            fclose(f);
+            mw_protect(0);
+            s_mw_page = 0;
+            if (k == 'w' || k == 'r') {
+                s_mw_lo = a; s_mw_hi = a + (n ? n : 4); s_mw_rd = k == 'r'; s_mw_hits = 0;
+                s_mw_page = ((uintptr_t)xbox_GetMemoryOffset() + a) & ~(uintptr_t)4095;
+                mw_protect(1);
+            }
+            fprintf(stderr, "[MWATCH] %s %08X..%08X\n", s_mw_page ? (s_mw_rd ? "read+write" : "write") : "off",
+                    s_mw_lo, s_mw_hi);
+            fflush(stderr);
+        }
+    }
+    return 0;
+}
+
+void xbox_MemWatchStart(void)
+{
+    const char *e = getenv("RECOMP_MEMWATCH");
+    if (e && *e && *e != '0')
+        CloseHandle(CreateThread(NULL, 0, mw_thread, NULL, 0, NULL));
+}

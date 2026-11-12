@@ -47,13 +47,27 @@ All under `xboxrecomp/src/`:
   delivered when the GPU reaches them rather than at the next vblank; 60 Hz or
   120 Hz vblank (the experimental 60 fps mode); per-call timing in the log.
 - **Window** (`video/fb_present.c`, `video/gfx_config.h`): the F6 graphics
-  menu, FPS counter, `settings.ini` persistence, and a "Working, please
+  menu (including the direct-movement and camera settings), FPS counter, `settings.ini` persistence, and a "Working, please
   wait..." note while the game draws nothing (saving, quitting).
-- **Diagnostics** (`kernel/xbox_memory_layout.c`): engine watchdog and
+- **Input** (`input/xinput_device.c`, `input/xinput_xbox.h`): a hook so the
+  game side can read and rewrite the pad each frame (used by direct movement).
+- **Diagnostics** (`kernel/xbox_memory_layout.c`, `kernel/kernel_bridge.c`): a
+  memory-write watch (`RECOMP_MEMWATCH`), engine watchdog and
   sampling profiler (`[EPROF]` lines), GPU draw debugging (`RECOMP_GPU_DEBUG`).
 - Rendering fixes: depth writes follow the NV2A/OpenGL rule (no write with the
   depth test off) — this fixed the black patches in house interiors; border
   sampling clamps unless a border colour is set.
+
+## Direct movement (experimental)
+
+`sims_bustinout/src/direct_move.c`, with hooks added to the generated code by
+`tools/postprocess_gen.py`. Turned on in the F6 menu (Left stick: "Moves your
+Sim"). The left stick walks the Sim by feeding the game's own router short
+waypoints, steering round obstacles; doors open and close as she passes by
+running the game's own door trees; the stick cancels a busy action. The right
+stick orbits and zooms a follow camera tuned from F6. A opens the lit object's
+menu, or, with nothing lit, the game's chooser bubbles listing every nearby
+object that has interactions. See `sims_bustinout/dist/README.txt`.
 
 ## Playing
 

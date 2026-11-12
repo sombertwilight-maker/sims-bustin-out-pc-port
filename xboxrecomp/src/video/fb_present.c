@@ -247,6 +247,11 @@ XboxGfxConfig *xbox_GfxConfig(void)
         s_gfx.tex_dump = env_int("RECOMP_TEX_DUMP", 0, 0, 1);
         s_gfx.tex_replace = env_int("RECOMP_TEX_REPLACE", 0, 0, 1);
         s_gfx.fps60 = env_int("RECOMP_FPS60", 0, 0, 1);
+        s_gfx.direct_move = env_int("SIMS_DIRECT_MOVE", 0, 0, 1);
+        s_gfx.cam_dist = env_int("SIMS_CAM_DIST", 55, 15, 200);
+        s_gfx.cam_angle = env_int("SIMS_CAM_ANGLE", 35, 5, 80);
+        s_gfx.cam_aim = env_int("SIMS_CAM_AIM", 6, 0, 20);
+        s_gfx.cam_follow = env_int("SIMS_CAM_FOLLOW", 2, 0, 3);
     }
     return &s_gfx;
 }
@@ -346,7 +351,8 @@ static const uint32_t *hires_frame(uint32_t *w, uint32_t *h)
 }
 
 /* The menu. */
-enum { MENU_SCALE, MENU_FPS60, MENU_FPS, MENU_DUMP, MENU_REPLACE, MENU_RELOAD, MENU_CLOSE, MENU_N };
+enum { MENU_SCALE, MENU_FPS60, MENU_DM, MENU_CAMDIST, MENU_CAMANGLE, MENU_CAMAIM, MENU_CAMFOLLOW, MENU_FPS,
+       MENU_DUMP, MENU_REPLACE, MENU_RELOAD, MENU_CLOSE, MENU_N };
 static int s_menu_open, s_menu_sel;
 static double s_fps_now;
 
@@ -361,6 +367,32 @@ static void menu_change(int item, int dir)
     case MENU_FPS60:
         g->fps60 = !g->fps60;
         settings_save("RECOMP_FPS60", g->fps60);
+        break;
+    case MENU_DM:
+        g->direct_move = !g->direct_move;
+        settings_save("SIMS_DIRECT_MOVE", g->direct_move);
+        break;
+    case MENU_CAMDIST:
+        g->cam_dist += dir * 5;
+        if (g->cam_dist < 15) g->cam_dist = 15;
+        if (g->cam_dist > 200) g->cam_dist = 200;
+        settings_save("SIMS_CAM_DIST", g->cam_dist);
+        break;
+    case MENU_CAMANGLE:
+        g->cam_angle += dir * 5;
+        if (g->cam_angle < 5) g->cam_angle = 5;
+        if (g->cam_angle > 80) g->cam_angle = 80;
+        settings_save("SIMS_CAM_ANGLE", g->cam_angle);
+        break;
+    case MENU_CAMAIM:
+        g->cam_aim += dir;
+        if (g->cam_aim < 0) g->cam_aim = 0;
+        if (g->cam_aim > 20) g->cam_aim = 20;
+        settings_save("SIMS_CAM_AIM", g->cam_aim);
+        break;
+    case MENU_CAMFOLLOW:
+        g->cam_follow = (g->cam_follow + dir + 4) % 4;
+        settings_save("SIMS_CAM_FOLLOW", g->cam_follow);
         break;
     case MENU_FPS:
         g->show_fps = !g->show_fps;
@@ -418,6 +450,79 @@ static int menu_key(UINT m, WPARAM vk)
  * a load that does not draw): a note says it is still working. */
 static int s_busy_note;
 
+static SRWLOCK s_pick_lock = SRWLOCK_INIT;
+static char s_pick_title[64], s_pick_hint[96], s_pick_items[XBOX_PICK_MAX][64];
+static int s_pick_n, s_pick_sel = -1;
+static volatile LONG s_pick_seq;
+
+void xbox_PickListShow(const char *title, const char *const *items, int n, int sel, const char *hint)
+{
+    int i;
+    if (n > XBOX_PICK_MAX) n = XBOX_PICK_MAX;
+    AcquireSRWLockExclusive(&s_pick_lock);
+    snprintf(s_pick_title, sizeof s_pick_title, "%s", title ? title : "");
+    snprintf(s_pick_hint, sizeof s_pick_hint, "%s", hint ? hint : "");
+    for (i = 0; i < n; i++)
+        snprintf(s_pick_items[i], sizeof s_pick_items[i], "%s", items[i]);
+    s_pick_n = n;
+    s_pick_sel = sel;
+    ReleaseSRWLockExclusive(&s_pick_lock);
+    InterlockedIncrement(&s_pick_seq);
+}
+
+void xbox_PickListHide(void)
+{
+    AcquireSRWLockExclusive(&s_pick_lock);
+    s_pick_sel = -1;
+    ReleaseSRWLockExclusive(&s_pick_lock);
+    InterlockedIncrement(&s_pick_seq);
+}
+
+static void pick_draw(HDC dc, int cw, int ch, int fh)
+{
+    int i, lh = fh * 3 / 2, pw, ph, x0, y0;
+    HBRUSH bg, hl;
+    HPEN pen, op;
+    HBRUSH ob;
+    (void)ch;
+    AcquireSRWLockShared(&s_pick_lock);
+    if (s_pick_sel < 0 || s_pick_n <= 0) {
+        ReleaseSRWLockShared(&s_pick_lock);
+        return;
+    }
+    pw = fh * 18;
+    ph = lh * (s_pick_n + 1) + fh * 2 + (s_pick_hint[0] ? lh : 0);
+    x0 = cw / 2 - pw / 2;
+    y0 = fh * 2;
+    bg = CreateSolidBrush(RGB(16, 22, 48)); hl = CreateSolidBrush(RGB(48, 70, 150));
+    pen = CreatePen(PS_SOLID, 2, RGB(120, 150, 255));
+    op = (HPEN)SelectObject(dc, pen);
+    ob = (HBRUSH)SelectObject(dc, bg);
+    RoundRect(dc, x0, y0, x0 + pw, y0 + ph, fh, fh);
+    {
+        RECT r = { x0 + fh, y0 + lh / 3, x0 + pw - fh, y0 + lh * 4 / 3 };
+        SetTextColor(dc, RGB(255, 255, 255));
+        DrawTextA(dc, s_pick_title, -1, &r, DT_CENTER | DT_SINGLELINE | DT_NOPREFIX);
+    }
+    for (i = 0; i < s_pick_n; i++) {
+        RECT row = { x0 + fh / 2, y0 + lh * (i + 1) + fh / 2, x0 + pw - fh / 2, 0 };
+        row.bottom = row.top + lh;
+        if (i == s_pick_sel)
+            FillRect(dc, &row, hl);
+        row.left += fh / 2;
+        SetTextColor(dc, i == s_pick_sel ? RGB(255, 255, 255) : RGB(210, 218, 245));
+        DrawTextA(dc, s_pick_items[i], -1, &row, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX | DT_END_ELLIPSIS);
+    }
+    if (s_pick_hint[0]) {
+        RECT r = { x0 + fh, y0 + lh * (s_pick_n + 1) + fh, x0 + pw - fh, y0 + ph - fh / 4 };
+        SetTextColor(dc, RGB(160, 170, 210));
+        DrawTextA(dc, s_pick_hint, -1, &r, DT_CENTER | DT_SINGLELINE | DT_NOPREFIX);
+    }
+    ReleaseSRWLockShared(&s_pick_lock);
+    SelectObject(dc, op); SelectObject(dc, ob);
+    DeleteObject(pen); DeleteObject(bg); DeleteObject(hl);
+}
+
 static void overlay_draw(HDC dc, int cw, int ch)
 {
     XboxGfxConfig *g = xbox_GfxConfig();
@@ -454,7 +559,8 @@ static void overlay_draw(HDC dc, int cw, int ch)
     }
     if (s_menu_open) {
         static const char *names[MENU_N] = {
-            "Internal resolution", "Frame rate", "Show FPS", "Dump textures", "Replace textures",
+            "Internal resolution", "Frame rate", "Left stick", "  Camera distance", "  Camera angle",
+            "  Camera aim height", "  Camera follows her", "Show FPS", "Dump textures", "Replace textures",
             "Reload replacement textures", "Close menu"
         };
         int pw = fh * 26, lh = fh * 3 / 2, ph = lh * (MENU_N + 2) + fh * 4, x0 = fh, y0 = fh, i;
@@ -486,6 +592,15 @@ static void overlay_draw(HDC dc, int cw, int ch)
                 else snprintf(t, sizeof t, "< %dx  %dx%d >", g->scale, 640 * g->scale, 480 * g->scale);
                 break;
             case MENU_FPS60:   snprintf(t, sizeof t, "%s", g->fps60 ? "60 (experimental)" : "30 (original)"); break;
+            case MENU_DM:      snprintf(t, sizeof t, "%s", g->direct_move ? "Moves your Sim" : "Moves the cursor"); break;
+            case MENU_CAMDIST: snprintf(t, sizeof t, "< %d.%d tiles >", g->cam_dist / 10, g->cam_dist % 10); break;
+            case MENU_CAMANGLE: snprintf(t, sizeof t, "< %d degrees down >", g->cam_angle); break;
+            case MENU_CAMAIM:  snprintf(t, sizeof t, "< %d.%d >", g->cam_aim / 10, g->cam_aim % 10); break;
+            case MENU_CAMFOLLOW: {
+                static const char *fl[4] = { "Off", "Slowly", "Normal", "Quickly" };
+                snprintf(t, sizeof t, "< %s >", fl[g->cam_follow & 3]);
+                break;
+            }
             case MENU_FPS:     snprintf(t, sizeof t, "%s", g->show_fps ? "On" : "Off"); break;
             case MENU_DUMP:    snprintf(t, sizeof t, "%s  (%d saved)", g->tex_dump ? "On" : "Off", g->dumped); break;
             case MENU_REPLACE: snprintf(t, sizeof t, "%s  (%d in use, %d found)", g->tex_replace ? "On" : "Off",
@@ -510,6 +625,7 @@ static void overlay_draw(HDC dc, int cw, int ch)
         SelectObject(dc, op); SelectObject(dc, ob);
         DeleteObject(pen); DeleteObject(bg); DeleteObject(hl);
     }
+    pick_draw(dc, cw, ch, fh);
     SelectObject(dc, old);
     DeleteObject(font);
 }
@@ -597,7 +713,7 @@ static void overlay_publish(HWND hwnd)
     static char last[512];
     char sig[512];
     RECT c;
-    int cw, ch, show = s_menu_open || g->show_fps;
+    int cw, ch, show = s_menu_open || g->show_fps || s_pick_sel >= 0;
     size_t i, n;
 
     GetClientRect(hwnd, &c);
@@ -611,8 +727,8 @@ static void overlay_publish(HWND hwnd)
         last[0] = 0;
         return;
     }
-    snprintf(sig, sizeof sig, "%d %d %d %d %d %d %d %d %d %d %d %d %d %.1f %s", cw, ch, s_menu_open, s_menu_sel,
-             g->fps60, g->scale, g->show_fps, g->tex_dump, g->tex_replace, g->dumped, g->replaced,
+    snprintf(sig, sizeof sig, "%ld %d %d %d %d %d %d %d %d %d %d %d %d %d %.1f %s", (long)s_pick_seq, cw, ch, s_menu_open, s_menu_sel,
+             g->fps60 * 2 + g->direct_move, g->scale, g->show_fps, g->tex_dump, g->tex_replace, g->dumped, g->replaced,
              g->replacements_found, g->gpu_active, s_fps_now, g->adapter);
     if (!strcmp(sig, last))
         return;

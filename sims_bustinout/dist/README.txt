@@ -43,6 +43,14 @@ GRAPHICS MENU (F6)
 ------------------
 Press F6 in the game window. Arrow keys select and change, F6 closes.
   Internal resolution  1x-4x (640x480 up to 2560x1920), drawn on your GPU
+  Frame rate           30 (original) or 60 (experimental); also caps the menus
+  Left stick           EXPERIMENTAL: "Moves your Sim" turns on direct
+                       movement (see below). Off by default.
+    Camera distance    how far behind your Sim the camera sits
+    Camera angle       how steeply it looks down
+    Camera aim         how high on your Sim it aims
+    Camera follow      how quickly it swings round behind her when she
+                       walks (Off, Slowly, Normal, Quickly)
   Show FPS             a frame-rate counter in the corner
   Dump textures        saves every texture the game loads, once, as
                        textures\dump\<name>.png next to the exe
@@ -51,6 +59,23 @@ Press F6 in the game window. Arrow keys select and change, F6 closes.
                        edit it or upscale it (any size works).
   Reload replacement   picks up new or edited files without restarting
 Choices are saved in settings.ini. Higher resolutions need a faster GPU.
+
+DIRECT MOVEMENT (EXPERIMENTAL)
+------------------------------
+With F6 > Left stick set to "Moves your Sim":
+  Left stick    walks your Sim, relative to the camera. She steers round
+                furniture and walls; doors open as she reaches them and
+                close behind her. Moving the stick while she is busy
+                cancels what she is doing (so she can get out of the bath).
+  Right stick   left/right orbits the camera round her, up/down zooms.
+  A             if something is lit up (glowing gold) under her, opens its
+                menu as usual. Otherwise it lists everything she can use
+                nearby, in the game's own bubbles; pick one with the stick
+                and A.
+The cursor is hidden; only the plumbob shows. Build/buy mode and menus keep
+the normal cursor. Known limits: holding the stick sideways makes her curve
+as the camera follows; the nearby list can reach through walls; in very
+cramped spots the game may refuse a route.
 
 SETTINGS
 --------

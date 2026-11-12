@@ -93,6 +93,9 @@ void xbox_InputInit(void);
  * Port: 0-3 (Xbox controller ports)
  */
 DWORD xbox_InputGetState(DWORD dwPort, XBOX_INPUT_STATE *pState);
+/* Optional: called with each state xbox_InputGetState returns, before the
+ * game sees it (a title's input mod). */
+extern void (*xbox_input_filter)(DWORD port, XBOX_INPUT_STATE *state);
 
 /**
  * Set controller vibration.

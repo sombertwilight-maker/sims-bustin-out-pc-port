@@ -661,6 +661,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
         if (!nv2a_d3d11_init())
             printf("Drawing with the software rasteriser.\n");
     }
+    {
+        extern void xbox_MemWatchStart(void);
+        xbox_MemWatchStart();                 /* RECOMP_MEMWATCH=1: debugging */
+        extern void sims_direct_move_init(void);
+        sims_direct_move_init();              /* left stick walks the Sim */
+    }
 
     /* Step 3: Initialize Xbox kernel */
     printf("Initializing Xbox kernel replacement...\n");
@@ -790,3 +796,4 @@ int main(int argc, char **argv)
     (void)argv;
     return WinMain(GetModuleHandle(NULL), NULL, GetCommandLineA(), SW_SHOW);
 }
+

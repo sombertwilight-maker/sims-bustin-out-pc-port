@@ -24,6 +24,11 @@ typedef struct {
     volatile int tex_replace;
     volatile int reload_seq;         /* bumped: re-read textures\replace */
     volatile int fps60;              /* experimental: 120 Hz vblank (RECOMP_FPS60) */
+    volatile int direct_move;        /* title option: left stick moves the character (SIMS_DIRECT_MOVE) */
+    volatile int cam_dist;           /* title option: follow camera distance, tenths of a tile (SIMS_CAM_DIST) */
+    volatile int cam_angle;          /* ... looking down, degrees (SIMS_CAM_ANGLE) */
+    volatile int cam_aim;            /* ... aim height above the floor, tenths of a tile (SIMS_CAM_AIM) */
+    volatile int cam_follow;         /* ... swinging behind her: 0 off, 1 slow, 2 normal, 3 fast (SIMS_CAM_FOLLOW) */
     /* reported by the back end */
     volatile int gpu_active;         /* 0: software renderer (no scaling) */
     volatile int scale_applied;
@@ -48,5 +53,12 @@ int  xbox_FramebufferWindowOverlayPlane(void);   /* video overlay in use */
  * functions around reading the pixels. */
 const uint32_t *xbox_FramebufferWindowOverlayImage(uint32_t *w, uint32_t *h, int *seq);
 void xbox_FramebufferWindowOverlayLock(int lock);
+
+
+/* A list the game's code can put on screen over the picture (the direct
+ * movement mod's "things nearby" list). Items are copied; sel < 0 hides. */
+#define XBOX_PICK_MAX 12
+void xbox_PickListShow(const char *title, const char *const *items, int n, int sel, const char *hint);
+void xbox_PickListHide(void);
 
 #endif

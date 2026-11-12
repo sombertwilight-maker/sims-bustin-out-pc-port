@@ -54,6 +54,48 @@ def patch_in(text, name, old, new):
 
 def title_patches(text):
     n = 0
+    # 0. Direct movement (direct_move.c): the cursor controller's per-frame
+    #    update calls the mod first, with g_ecx = the controller.
+    text, k = patch_in(text, "sub_00039000", "loc_00039000: ;\n",
+                       "loc_00039000: ;\n    { extern void sims_dm_cursor(void); sims_dm_cursor(); } "
+                       + MARK + "\n")
+    n += k
+    # 0b. Direct movement: the walk router's per-tick update (sub_000B5BB0,
+    #     g_ecx = the router) lets the mod steer the path ahead.
+    text, k = patch_in(text, "sub_000B5BB0", "loc_000B5BB0: ;\n",
+                       "loc_000B5BB0: ;\n    { extern void sims_dm_router(void); sims_dm_router(); } "
+                       + MARK + "\n")
+    n += k
+    # 0c. Direct movement: the "animate" primitive (sub_000B5F60, g_ecx =
+    #     the router, args: the VM stack frame and the operand). The mod
+    #     notes which behaviour tree is animating (her idle loop or not); while
+    #     the stick walks her out of the idle loop it holds that animation
+    #     (returns 2, still playing), and ends it (1, done) when she stops.
+    text, k = patch_in(text, "sub_000B5F60", "loc_000B5F60: ;\n",
+                       "loc_000B5F60: ;\n    { extern int sims_dm_anim(void); int _dm = sims_dm_anim(); if (_dm) "
+                       "{ eax = (uint32_t)_dm; g_ebp = ebp; g_seh_ebp = ebp; esp += 12; return; } } "
+                       + MARK + "\n")
+    n += k
+    # 0d. Direct movement: the cursor controller's draw (sub_0003A960, g_ecx
+    #     = the controller, one argument). In live mode with the left stick
+    #     moving the Sim, the cursor (beam and rings) is not drawn; the Sim's
+    #     own diamond is all that shows.
+    text, k = patch_in(text, "sub_0003A960", "loc_0003A960: ;\n",
+                       "loc_0003A960: ;\n    { extern int sims_dm_hide_cursor(void); if (sims_dm_hide_cursor()) "
+                       "{ g_ebp = ebp; g_seh_ebp = ebp; esp += 8; return; } } " + MARK + "\n")
+    n += k
+    # 0e. ... and the rings under the cursor, which the HUD manager draws at
+    #     the cursor's position (sub_00055950, its argument the controller).
+    text, k = patch_in(text, "sub_00055950", "loc_00055950: ;\n",
+                       "loc_00055950: ;\n    { extern int sims_dm_hide_rings(void); if (sims_dm_hide_rings()) "
+                       "{ g_ebp = ebp; g_seh_ebp = ebp; esp += 8; return; } } " + MARK + "\n")
+    n += k
+    # 0g. Direct movement: the router's checks on her steps pass while the
+    #     stick steers her (sub_001ACF00, thiscall, 4 args).
+    text, k = patch_in(text, "sub_001ACF00", "loc_001ACF00: ;\n",
+                       "loc_001ACF00: ;\n    { extern int sims_dm_stand_ok(void); if (sims_dm_stand_ok()) "
+                       "{ eax = 1; g_ebp = ebp; g_seh_ebp = ebp; esp += 20; return; } } " + MARK + "\n")
+    n += k
     # 3. Multisample type for the 480-line modes (sub_00128BD0): the title
     #    asks D3D for 0x2222, 4x supersampling, so every frame is drawn at
     #    1280x960 and filtered down. The pushbuffer executor draws on the CPU,

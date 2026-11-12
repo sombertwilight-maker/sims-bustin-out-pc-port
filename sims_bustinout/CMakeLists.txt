@@ -62,6 +62,8 @@ set(GAME_SOURCES
     src/main.c
     src/recomp_manual.c
     src/iso_setup.c
+    src/direct_move.c
+    src/prof.c
     # Add game-specific sources here, e.g.:
     # src/asset_loader.c
     # src/custom_renderer.c
@@ -89,6 +91,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/recomp
     ${XBOXRECOMP_DIR}/include
+    ${XBOXRECOMP_DIR}/src
 )
 
 # Windows SDK libraries needed at link time
